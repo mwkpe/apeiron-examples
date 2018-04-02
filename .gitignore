@@ -30,3 +30,15 @@
 *.exe
 *.out
 *.app
+
+# Libraries
+external/
+
+# Build directories
+cmake-build*/
+
+# IDE
+.idea/
+
+# Assets
+assets/

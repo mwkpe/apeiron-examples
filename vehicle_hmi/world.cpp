@@ -48,6 +48,9 @@ void hmi::World::update([[maybe_unused]] float time, float delta_time, const ape
     camera_.orient(input->mouse_x_rel, input->mouse_y_rel, options_->camera_sensitivity);
   }
 
+  if (options_->vehicle_velocity != ego_vehicle_.velocity())
+    ego_vehicle_.set_velocity(options_->vehicle_velocity);
+
   float ground_z = ground_.position().z;
   ground_z += delta_time * ego_vehicle_.velocity();
   if (ground_z > ground_.spacing().z)

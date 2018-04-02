@@ -3,7 +3,7 @@
 
 
 #include <string_view>
-#include "engine/color.h"
+#include <glm/glm.hpp>
 
 
 namespace hmi {
@@ -21,7 +21,7 @@ struct Options
   int max_fps = 90;
   float camera_velocity = 10.0f;
   float camera_sensitivity = 0.02f;
-  apeiron::engine::Color main_color = apeiron::engine::Color{1.0f, 1.0f, 1.0f, 1.0f};
+  glm::vec4 main_color = {1.0f, 1.0f, 1.0f, 1.0f};
 };
 
 

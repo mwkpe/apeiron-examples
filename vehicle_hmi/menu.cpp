@@ -1,6 +1,7 @@
 #include "menu.h"
 
 
+#include <array>
 #include "GL/glew.h"
 #include <glm/glm.hpp>
 #include "imgui/imgui.h"
@@ -82,13 +83,26 @@ void hmi::Menu::build(Options* options, float time)
     ImGui::Text("Frametime: %.3f ms", 1000.0f / io.Framerate);
     ImGui::Checkbox("Limit framerate", &options->limit_fps);
     ImGui::SliderInt("Max FPS", &options->max_fps, 30, 240);
-    ImGui::Text("World");
+    ImGui::Text("Rendering");
     ImGui::Checkbox("Wireframe (F2)", &options->wireframe);
+    ImGui::Text("World");
+    ImGui::SliderFloat("Vehicle velocity (m/s)", &options->vehicle_velocity, -10.0f, 40.0f);
     ImGui::Text("Camera");
     ImGui::SliderFloat("Velocity (m/s)", &options->camera_velocity, 0.0f, 20.0f);
     ImGui::SliderFloat("Sensitivity", &options->camera_sensitivity, 0.0f, 0.1f);
     if (ImGui::Button("Quit"))
       options->quit = true;
+    ImGui::End();
+
+    ImGui::Begin("Networking");
+    static std::array<char, 32> ip{"192.168.1.100"};
+    int port = options->port;
+    ImGui::InputText("IP", ip.data(), sizeof(ip));
+    options->ip = ip.data();
+    ImGui::InputInt("Port", &port);
+    options->port = port;
+    if (ImGui::Button("Connect")) {
+    }
     ImGui::End();
   }
 }

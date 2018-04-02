@@ -16,6 +16,7 @@ public:
   void load_model(std::string_view filename, int flags);
   void load_texture(std::string_view filename);
   float velocity() const { return velocity_; }
+  void set_velocity(float velocity) { velocity_ = velocity; }
   void render() const override { texture_.bind(); model_.render(); }
 
 private:

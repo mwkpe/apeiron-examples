@@ -22,7 +22,6 @@ class World final
 public:
   World(const Options* options) : options_{options},
       ground_{{30.0f, 0.0f, 200.0f}, {2.5f, 0.0f, 2.5f}, 0.01f}, light_{&bulb_} {}
-
   void init();
   void reset();
   void update(float time, float delta_time, const apeiron::engine::Input* input = nullptr);

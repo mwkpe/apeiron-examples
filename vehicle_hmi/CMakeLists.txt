@@ -34,8 +34,8 @@ add_executable(vehicle_hmi
     ${APEIRON_DIRECTORY}/opengl/texture.h
     ${APEIRON_DIRECTORY}/opengl/grid.cpp
     ${APEIRON_DIRECTORY}/opengl/grid.h
-    ${APEIRON_DIRECTORY}/opengl/cube.cpp
-    ${APEIRON_DIRECTORY}/opengl/cube.h
+    ${APEIRON_DIRECTORY}/opengl/cuboid.cpp
+    ${APEIRON_DIRECTORY}/opengl/cuboid.h
     ${APEIRON_DIRECTORY}/opengl/cylinder.cpp
     ${APEIRON_DIRECTORY}/opengl/cylinder.h
     ${APEIRON_DIRECTORY}/opengl/model.cpp
@@ -44,7 +44,6 @@ add_executable(vehicle_hmi
     ${APEIRON_DIRECTORY}/opengl/gui.h
     ${APEIRON_DIRECTORY}/engine/error.h
     ${APEIRON_DIRECTORY}/engine/input.h
-    ${APEIRON_DIRECTORY}/engine/color.h
     ${APEIRON_DIRECTORY}/engine/entity.h
     ${APEIRON_DIRECTORY}/engine/camera.cpp
     ${APEIRON_DIRECTORY}/engine/camera.h

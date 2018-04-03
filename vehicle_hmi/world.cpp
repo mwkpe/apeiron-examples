@@ -15,13 +15,14 @@ void hmi::World::init()
 
   ego_vehicle_.load_model("assets/bmw.obj", mf::vertices | mf::normals | mf::tex_coords);
   ego_vehicle_.load_texture("assets/bmw.png");
-  ego_vehicle_.set_position(0.0f, 0.0f, ego_vehicle_.size().z / 2.0f + 0.1f);  // Prevent z-fighting
   ego_vehicle_.set_center(0.0f, ego_vehicle_.size().y / 2.0f, 0.0f);
+  ego_vehicle_.set_color({0.129f, 0.588f, 0.952f, 1.0f});
 
   target_vehicle_.load_model("assets/audi.obj", mf::vertices | mf::normals | mf::tex_coords);
   target_vehicle_.load_texture("assets/audi.png");
   target_vehicle_.set_position(+2.5f, 0.0f, -10.0f);
   target_vehicle_.set_center(0.0f, target_vehicle_.size().y / 2.0f, 0.0f);
+  target_vehicle_.set_color({0.956f, 0.262f, 0.211f, 1.0f});
 
   light_.set_position(0.0f, 5.0f, 1.0f);
   light_.set_color(1.0f, 1.0f, 1.0f);
@@ -89,7 +90,7 @@ void hmi::World::render()
   if (options_->bounding_boxes) {
     renderer_.set_lighting(false);
     renderer_.use_color_shading();
-    renderer_.render_bounds(ego_vehicle_, glm::vec4{0.129f, 0.588f, 0.952f, 1.0f});
-    renderer_.render_bounds(target_vehicle_, glm::vec4{0.956f, 0.262f, 0.211f, 1.0f});
+    renderer_.render_bounds(ego_vehicle_, ego_vehicle_.color());
+    renderer_.render_bounds(target_vehicle_, target_vehicle_.color());
   }
 }

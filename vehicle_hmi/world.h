@@ -21,7 +21,7 @@ class World final
 {
 public:
   World(const Options* options) : options_{options},
-      ground_{{30.0f, 0.0f, 200.0f}, {2.5f, 0.0f, 2.5f}, 0.01f, {0.25f, 0.25f, 0.25f}},
+      ground_{{30.0f, 0.0f, 400.0f}, {2.5f, 0.0f, 2.5f}, 0.01f, {0.25f, 0.25f, 0.25f}},
       light_{&bulb_},
       ego_vehicle_{{1.847f, 1.271f, 4.131f}},
       target_vehicle_{{1.916f, 1.266f, 4.396f}} {}

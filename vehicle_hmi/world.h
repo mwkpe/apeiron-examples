@@ -21,7 +21,10 @@ class World final
 {
 public:
   World(const Options* options) : options_{options},
-      ground_{{30.0f, 0.0f, 200.0f}, {2.5f, 0.0f, 2.5f}, 0.01f}, light_{&bulb_} {}
+      ground_{{30.0f, 0.0f, 200.0f}, {2.5f, 0.0f, 2.5f}, 0.01f, {0.25f, 0.25f, 0.25f}},
+      light_{&bulb_},
+      ego_vehicle_{{1.847f, 1.271f, 4.131f}},
+      target_vehicle_{{1.916f, 1.266f, 4.396f}} {}
   void init();
   void reset();
   void update(float time, float delta_time, const apeiron::engine::Input* input = nullptr);
@@ -35,6 +38,7 @@ private:
   Ground ground_;
   Light light_;
   Vehicle ego_vehicle_;
+  Vehicle target_vehicle_;
   int frame_ = 0;
 };
 

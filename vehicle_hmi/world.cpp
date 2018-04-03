@@ -15,12 +15,17 @@ void hmi::World::init()
 
   ego_vehicle_.load_model("assets/bmw.obj", mf::vertices | mf::normals | mf::tex_coords);
   ego_vehicle_.load_texture("assets/bmw.png");
-  ego_vehicle_.set_position(0.0f, 0.0f, 4.13102f / 2.0f);
+  ego_vehicle_.set_position(0.0f, 0.0f, ego_vehicle_.size().z / 2.0f + 0.1f);  // Prevent z-fighting
+  ego_vehicle_.set_center(0.0f, ego_vehicle_.size().y / 2.0f, 0.0f);
 
-  light_.set_position(0.0f, 7.5f, 5.5f);
+  target_vehicle_.load_model("assets/audi.obj", mf::vertices | mf::normals | mf::tex_coords);
+  target_vehicle_.load_texture("assets/audi.png");
+  target_vehicle_.set_position(+2.5f, 0.0f, -10.0f);
+  target_vehicle_.set_center(0.0f, target_vehicle_.size().y / 2.0f, 0.0f);
+
+  light_.set_position(0.0f, 5.0f, 1.0f);
   light_.set_color(1.0f, 1.0f, 1.0f);
 
-  renderer_.set_light_position(light_.position());
   renderer_.set_light_color(light_.color());
 }
 
@@ -55,6 +60,8 @@ void hmi::World::update([[maybe_unused]] float time, float delta_time, const ape
   ground_z += delta_time * ego_vehicle_.velocity();
   if (ground_z > ground_.spacing().z)
     ground_z -= ground_.spacing().z;
+  if (ground_z < -ground_.spacing().z)
+    ground_z += ground_.spacing().z;
   ground_.set_position(0.0f, 0.0f, ground_z);
 }
 
@@ -73,6 +80,16 @@ void hmi::World::render()
   renderer_.render(ground_);
 
   renderer_.use_texture_shading();
-  renderer_.set_lighting(true);
+  renderer_.set_light_position(ego_vehicle_.position() + light_.position());
+  renderer_.set_lighting(options_->lighting);
   renderer_.render(ego_vehicle_);
+  renderer_.set_light_position(target_vehicle_.position() + light_.position());
+  renderer_.render(target_vehicle_);
+
+  if (options_->bounding_boxes) {
+    renderer_.set_lighting(false);
+    renderer_.use_color_shading();
+    renderer_.render_bounds(ego_vehicle_, glm::vec4{0.129f, 0.588f, 0.952f, 1.0f});
+    renderer_.render_bounds(target_vehicle_, glm::vec4{0.956f, 0.262f, 0.211f, 1.0f});
+  }
 }

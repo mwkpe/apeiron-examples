@@ -10,6 +10,7 @@
 #include "opengl/renderer.h"
 #include "options.h"
 #include "ground.h"
+#include "ground_overlay.h"
 #include "light.h"
 #include "vehicle.h"
 
@@ -36,6 +37,7 @@ private:
   apeiron::opengl::Model bulb_;
   apeiron::engine::Camera camera_;
   Ground ground_;
+  Ground_overlay ground_overlay_;
   Light light_;
   Vehicle ego_vehicle_;
   Vehicle target_vehicle_;

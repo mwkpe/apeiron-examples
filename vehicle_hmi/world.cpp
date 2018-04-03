@@ -20,7 +20,7 @@ void hmi::World::init()
 
   target_vehicle_.load_model("assets/audi.obj", mf::vertices | mf::normals | mf::tex_coords);
   target_vehicle_.load_texture("assets/audi.png");
-  target_vehicle_.set_position(+2.5f, 0.0f, -10.0f);
+  target_vehicle_.set_position(2.5f, 0.0f, -10.0f);
   target_vehicle_.set_center(0.0f, target_vehicle_.size().y / 2.0f, 0.0f);
   target_vehicle_.set_color({0.956f, 0.262f, 0.211f, 1.0f});
 
@@ -58,7 +58,7 @@ void hmi::World::update([[maybe_unused]] float time, float delta_time, const ape
     ego_vehicle_.set_velocity(options_->vehicle_velocity);
 
   float ground_z = ground_.position().z;
-  ground_z += delta_time * ego_vehicle_.velocity();
+  ground_z += delta_time * (ego_vehicle_.velocity() / 2.5f);
   if (ground_z > ground_.spacing().z)
     ground_z -= ground_.spacing().z;
   if (ground_z < -ground_.spacing().z)
@@ -79,6 +79,8 @@ void hmi::World::render()
   renderer_.use_vertex_color_shading();
   renderer_.set_lighting(false);
   renderer_.render(ground_);
+  renderer_.use_color_shading();
+  renderer_.render(ground_overlay_, {1.0f, 0.596f, 0.0f, 1.0f});
 
   renderer_.use_texture_shading();
   renderer_.set_light_position(ego_vehicle_.position() + light_.position());

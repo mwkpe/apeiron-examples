@@ -16,6 +16,8 @@ struct Options
   bool quit = false;
   bool show_gui = true;
   bool wireframe = false;
+  bool lighting = true;
+  bool bounding_boxes = false;
   bool limit_fps = true;
   int window_width = 1280;
   int window_height = 720;

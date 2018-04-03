@@ -77,14 +77,18 @@ void hmi::Menu::build(Options* options, float time)
 
   create_frame();
   {
-    ImGui::Begin("Debug view (F1)");
-    ImGui::Text("Time: %.2f", time);
+    ImGui::Begin("Debug view");
+    ImGui::Text("Runtime: %.0f s", time);
     ImGui::Text("Framerate: %.0f fps", io.Framerate);
-    ImGui::Text("Frametime: %.3f ms", 1000.0f / io.Framerate);
-    ImGui::Checkbox("Limit framerate", &options->limit_fps);
-    ImGui::SliderInt("Max FPS", &options->max_fps, 30, 240);
+    ImGui::Text("Frametime: %.1f ms", 1000.0f / io.Framerate);
     ImGui::Text("Rendering");
-    ImGui::Checkbox("Wireframe (F2)", &options->wireframe);
+    ImGui::Checkbox("Framerate limit", &options->limit_fps);
+    ImGui::SliderInt("FPS", &options->max_fps, 30, 240);
+    ImGui::Checkbox("Wireframe", &options->wireframe);
+    ImGui::SameLine();
+    ImGui::Checkbox("Lighting", &options->lighting);
+    ImGui::SameLine();
+    ImGui::Checkbox("Bounding boxes", &options->bounding_boxes);
     ImGui::Text("World");
     ImGui::SliderFloat("Vehicle velocity (m/s)", &options->vehicle_velocity, -10.0f, 40.0f);
     ImGui::Text("Camera");

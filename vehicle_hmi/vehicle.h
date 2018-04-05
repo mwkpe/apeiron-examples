@@ -2,6 +2,7 @@
 #define HMI_VEHICLE_H
 
 
+#include <glm/glm.hpp>
 #include "engine/entity.h"
 #include "opengl/model.h"
 #include "opengl/cuboid.h"

@@ -93,7 +93,7 @@ void hmi::Menu::build(Options* options, float time)
     ImGui::Checkbox("Ground overlay", &options->ground_overlay);
     ImGui::Text("World");
     ImGui::SliderFloat("Vehicle velocity (m/s)", &options->vehicle_velocity, -10.0f, 40.0f);
-    ImGui::SliderFloat("Distance deviation (m)", &options->distance_deviation, -50.0f, 100.0f);
+    ImGui::SliderFloat("Distance deviation (m)", &options->distance_deviation, -100.0f, 50.0f);
     ImGui::Text("Camera");
     ImGui::SliderFloat("Velocity (m/s)", &options->camera_velocity, 0.0f, 20.0f);
     ImGui::SliderFloat("Sensitivity", &options->camera_sensitivity, 0.0f, 0.1f);
@@ -107,7 +107,7 @@ void hmi::Menu::build(Options* options, float time)
     ImGui::InputText("IP", ip.data(), sizeof(ip));
     options->ip = ip.data();
     ImGui::InputInt("Port", &port);
-    options->port = port;
+    options->port = static_cast<std::uint16_t>(port);
     if (ImGui::Button("Connect")) {
     }
     ImGui::End();

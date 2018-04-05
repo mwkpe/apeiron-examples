@@ -3,7 +3,7 @@
 
 
 #include "engine/entity.h"
-#include "opengl/Line_array.h"
+#include "opengl/line_array.h"
 
 
 namespace hmi {

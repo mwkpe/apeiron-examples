@@ -66,6 +66,7 @@ void hmi::World::update([[maybe_unused]] float time, float delta_time, const ape
   ground_.set_position(0.0f, 0.0f, ground_z);
 
   deviation_meter_.set_deviation(options_->distance_deviation);
+  ground_overlay_.set_position(0.0f, ground_overlay_.position().y, options_->distance_deviation);
 }
 
 
@@ -74,7 +75,7 @@ void hmi::World::render()
   frame_++;
   auto aspect_ratio = static_cast<float>(options_->window_width) / options_->window_height;
 
-  renderer_.set_projection(glm::perspective(glm::radians(45.0f), aspect_ratio, 1.5f, 500.0f));
+  renderer_.set_projection(glm::perspective(glm::radians(45.0f), aspect_ratio, 2.5f, 500.0f));
   renderer_.set_view(camera_.view());
   renderer_.set_wireframe(options_->wireframe);
   renderer_.set_light_color({1.0f, 1.0f, 1.0f});
@@ -84,8 +85,10 @@ void hmi::World::render()
   renderer_.render(ground_);
   if (options_->ground_overlay) {
     renderer_.use_color_shading();
-    renderer_.render(ground_overlay_, {1.0f, 0.596f, 0.0f, 1.0f});
     renderer_.render(deviation_meter_, deviation_meter_.color());
+    auto c = deviation_meter_.color();
+    c.a = 1.0f;
+    renderer_.render(ground_overlay_, c);
   }
 
   renderer_.use_texture_shading();

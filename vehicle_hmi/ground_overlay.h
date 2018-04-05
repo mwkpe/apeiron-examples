@@ -3,7 +3,7 @@
 
 
 #include "engine/entity.h"
-#include "opengl/line_array.h"
+#include "opengl/rectangle.h"
 
 
 namespace hmi {
@@ -13,11 +13,12 @@ class Ground_overlay final : public apeiron::engine::Entity
 {
 public:
   Ground_overlay();
-  void render() const override { line_array_.render(); }
+  void render() const override;
 
 
 private:
-  apeiron::opengl::Line_array line_array_;
+  apeiron::opengl::Rectangle horizontal_;
+  apeiron::opengl::Rectangle vertical_;
 };
 
 

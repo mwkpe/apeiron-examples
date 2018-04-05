@@ -20,7 +20,7 @@ void hmi::World::init()
 
   target_vehicle_.load_model("assets/audi.obj", mf::vertices | mf::normals | mf::tex_coords);
   target_vehicle_.load_texture("assets/audi.png");
-  target_vehicle_.set_position(5.0f, 0.0f, -15.0f);
+  target_vehicle_.set_position(5.0f, 0.0f, 25.0f);
   target_vehicle_.set_center(0.0f, target_vehicle_.size().y / 2.0f, 0.0f);
   target_vehicle_.set_color({0.956f, 0.262f, 0.211f, 1.0f});
 
@@ -66,7 +66,7 @@ void hmi::World::update([[maybe_unused]] float time, float delta_time, const ape
   ground_.set_position(0.0f, 0.0f, ground_z);
 
   deviation_meter_.set_deviation(options_->distance_deviation);
-  ground_overlay_.set_position(0.0f, ground_overlay_.position().y, options_->distance_deviation);
+  target_position_.set_position(0.0f, target_position_.position().y, options_->distance_deviation);
 }
 
 
@@ -88,7 +88,7 @@ void hmi::World::render()
     renderer_.render(deviation_meter_, deviation_meter_.color());
     auto c = deviation_meter_.color();
     c.a = 1.0f;
-    renderer_.render(ground_overlay_, c);
+    renderer_.render(target_position_, c);
   }
 
   renderer_.use_texture_shading();

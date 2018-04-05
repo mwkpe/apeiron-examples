@@ -1,5 +1,5 @@
-#ifndef HMI_GROUND_OVERLAY_H
-#define HMI_GROUND_OVERLAY_H
+#ifndef HMI_POSITION_MARKER_H
+#define HMI_POSITION_MARKER_H
 
 
 #include "engine/entity.h"
@@ -9,10 +9,10 @@
 namespace hmi {
 
 
-class Ground_overlay final : public apeiron::engine::Entity
+class Position_marker final : public apeiron::engine::Entity
 {
 public:
-  Ground_overlay();
+  Position_marker();
   void render() const override;
 
 
@@ -25,4 +25,4 @@ private:
 }  // namespace hmi
 
 
-#endif  // HMI_GROUND_OVERLAY_H
+#endif  // HMI_POSITION_MARKER_H

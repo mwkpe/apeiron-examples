@@ -10,7 +10,7 @@
 #include "opengl/renderer.h"
 #include "options.h"
 #include "ground.h"
-#include "ground_overlay.h"
+#include "position_marker.h"
 #include "deviation_meter.h"
 #include "light.h"
 #include "vehicle.h"
@@ -38,7 +38,7 @@ private:
   apeiron::opengl::Model bulb_;
   apeiron::engine::Camera camera_;
   Ground ground_;
-  Ground_overlay ground_overlay_;
+  Position_marker target_position_;
   Deviation_meter deviation_meter_;
   Light light_;
   Vehicle ego_vehicle_;

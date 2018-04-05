@@ -11,6 +11,7 @@
 #include "options.h"
 #include "ground.h"
 #include "ground_overlay.h"
+#include "deviation_meter.h"
 #include "light.h"
 #include "vehicle.h"
 
@@ -38,6 +39,7 @@ private:
   apeiron::engine::Camera camera_;
   Ground ground_;
   Ground_overlay ground_overlay_;
+  Deviation_meter deviation_meter_;
   Light light_;
   Vehicle ego_vehicle_;
   Vehicle target_vehicle_;

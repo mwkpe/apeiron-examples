@@ -17,7 +17,7 @@ void hmi::Deviation_meter::set_deviation(float deviation)
   set_position(position_.x, position_.y, deviation/2.0f);
 
   if (std::abs(deviation) < 5.0f)
-    color_ = glm::vec4{0.0f, 0.784f, 0.325f, 0.33f};
+    color_ = glm::vec4{0.0f, 0.717f, 0.215f, 0.33f};
   else if (std::abs(deviation) < 15.0f)
     color_ = glm::vec4{1.0f, 0.839f, 0.0f, 0.33f};
   else

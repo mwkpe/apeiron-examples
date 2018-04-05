@@ -36,6 +36,8 @@ add_executable(vehicle_hmi
     ${APEIRON_DIRECTORY}/opengl/grid.h
     ${APEIRON_DIRECTORY}/opengl/line_array.cpp
     ${APEIRON_DIRECTORY}/opengl/line_array.h
+    ${APEIRON_DIRECTORY}/opengl/rectangle.cpp
+    ${APEIRON_DIRECTORY}/opengl/rectangle.h
     ${APEIRON_DIRECTORY}/opengl/cuboid.cpp
     ${APEIRON_DIRECTORY}/opengl/cuboid.h
     ${APEIRON_DIRECTORY}/opengl/cylinder.cpp
@@ -66,6 +68,8 @@ add_executable(vehicle_hmi
     light.h
     ground.h
     ground_overlay.cpp
-    ground_overlay.h)
+    ground_overlay.h
+    deviation_meter.cpp
+    deviation_meter.h)
 
 target_link_libraries(vehicle_hmi -lmingw32 -lglew32 -lglu32 -lopengl32 -lSDL2main -lSDL2)

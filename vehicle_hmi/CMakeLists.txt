@@ -69,6 +69,10 @@ add_executable(vehicle_hmi
     vehicle.h
     light.h
     ground.h
+    road.cpp
+    road.h
+    line_markings.cpp
+    line_markings.h
     position_marker.cpp
     position_marker.h
     deviation_meter.cpp

@@ -20,7 +20,7 @@ void hmi::World::init()
 
   target_vehicle_.load_model("assets/audi.obj", mf::vertices | mf::normals | mf::tex_coords);
   target_vehicle_.load_texture("assets/audi.png");
-  target_vehicle_.set_position(5.0f, 0.0f, 25.0f);
+  target_vehicle_.set_position(5.0f, 0.0f, 55.0f);
   target_vehicle_.set_center(0.0f, target_vehicle_.size().y / 2.0f, 0.0f);
   target_vehicle_.set_color({0.956f, 0.262f, 0.211f, 1.0f});
 
@@ -65,6 +65,15 @@ void hmi::World::update([[maybe_unused]] float time, float delta_time, const ape
     ground_z += ground_.spacing().z;
   ground_.set_position(0.0f, 0.0f, ground_z);
 
+  float line_z = line_markings_.position().z;
+  float line_spacing = line_markings_.line_spacing();
+  line_z += delta_time * (ego_vehicle_.velocity());
+  if (line_z > line_spacing)
+    line_z -= line_spacing;
+  if (line_z < -line_spacing)
+    line_z += line_spacing;
+  line_markings_.set_position(0.0f, 0.0f, line_z);
+
   deviation_meter_.set_deviation(options_->distance_deviation);
   target_position_.set_position(0.0f, options_->distance_deviation);
 }
@@ -82,7 +91,17 @@ void hmi::World::render()
 
   renderer_.use_vertex_color_shading();
   renderer_.set_lighting(false);
-  renderer_.render(ground_);
+
+  if (options_->ground) {
+    renderer_.render(ground_);
+  }
+
+  renderer_.use_color_shading();
+  if (options_->road) {
+    renderer_.render(road_, road_.color());
+    renderer_.render(line_markings_, line_markings_.color());
+  }
+
   if (options_->ground_overlay) {
     renderer_.use_color_shading();
     renderer_.render(deviation_meter_, deviation_meter_.color());

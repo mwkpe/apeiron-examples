@@ -3,7 +3,7 @@
 
 
 #include "engine/entity.h"
-#include "opengl/rectangle.h"
+#include "opengl/polygon.h"
 
 
 namespace hmi {
@@ -12,13 +12,18 @@ namespace hmi {
 class Position_marker final : public apeiron::engine::Entity
 {
 public:
+  enum class Style { Cross, Target };
+
   Position_marker();
+  void set_style(Style style);
+  void set_position(float x, float y);
   void render() const override;
 
-
 private:
-  apeiron::opengl::Rectangle horizontal_;
-  apeiron::opengl::Rectangle vertical_;
+  Style style_ = Style::Target;
+  apeiron::opengl::Polygon cross_;
+  apeiron::opengl::Polygon circle_;
+  apeiron::opengl::Polygon triangle_;
 };
 
 

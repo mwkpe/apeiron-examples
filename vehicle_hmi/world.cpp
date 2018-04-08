@@ -66,7 +66,7 @@ void hmi::World::update([[maybe_unused]] float time, float delta_time, const ape
   ground_.set_position(0.0f, 0.0f, ground_z);
 
   deviation_meter_.set_deviation(options_->distance_deviation);
-  target_position_.set_position(0.0f, target_position_.position().y, options_->distance_deviation);
+  target_position_.set_position(0.0f, options_->distance_deviation);
 }
 
 

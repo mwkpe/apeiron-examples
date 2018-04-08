@@ -18,7 +18,9 @@ struct Options
   bool wireframe = false;
   bool lighting = true;
   bool bounding_boxes = false;
+  bool ground = false;
   bool ground_overlay = true;
+  bool road = true;
   bool limit_fps = true;
   int window_width = 1280;
   int window_height = 720;

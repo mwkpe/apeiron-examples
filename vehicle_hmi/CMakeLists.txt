@@ -36,6 +36,8 @@ add_executable(vehicle_hmi
     ${APEIRON_DIRECTORY}/opengl/grid.h
     ${APEIRON_DIRECTORY}/opengl/line_array.cpp
     ${APEIRON_DIRECTORY}/opengl/line_array.h
+    ${APEIRON_DIRECTORY}/opengl/polygon.cpp
+    ${APEIRON_DIRECTORY}/opengl/polygon.h
     ${APEIRON_DIRECTORY}/opengl/rectangle.cpp
     ${APEIRON_DIRECTORY}/opengl/rectangle.h
     ${APEIRON_DIRECTORY}/opengl/cuboid.cpp

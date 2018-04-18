@@ -88,6 +88,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
     return elapsed;
   };
 
+  int camera_position = 0;
   bool benchmarking = false;
   float benchmark_start_time = 0;
   int benchmark_total_frames = 0;
@@ -121,6 +122,11 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
               break;
             case SDLK_F3:
               world.reset();
+              break;
+            case SDLK_F4:
+              world.set_camera(camera_position++);
+              if (camera_position > 2)
+                camera_position = 0;
               break;
             case SDLK_F6:
               if (!benchmarking) {

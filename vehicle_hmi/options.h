@@ -18,8 +18,9 @@ struct Options
   bool wireframe = false;
   bool lighting = true;
   bool bounding_boxes = false;
-  bool ground = false;
+  bool ground = true;
   bool ground_overlay = true;
+  bool animate_overlay = true;
   bool road = true;
   bool limit_fps = true;
   int window_width = 1280;
@@ -32,6 +33,7 @@ struct Options
   std::string ip = "192.168.1.100";
   std::uint16_t port = 30001;
   float vehicle_velocity = 0.0f;
+  float target_velocity = 32.0f;
   float distance_deviation = 1.0f;
 };
 

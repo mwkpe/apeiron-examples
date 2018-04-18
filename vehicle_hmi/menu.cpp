@@ -91,12 +91,14 @@ void hmi::Menu::build(Options* options, float time)
     ImGui::Checkbox("Bounding boxes", &options->bounding_boxes);
     ImGui::Checkbox("Ground", &options->ground);
     ImGui::SameLine();
+    ImGui::Checkbox("Road", &options->road);
     ImGui::Checkbox("Ground overlay", &options->ground_overlay);
     ImGui::SameLine();
-    ImGui::Checkbox("Road", &options->road);
+    ImGui::Checkbox("Animate overlay", &options->animate_overlay);
     ImGui::Text("World");
-    ImGui::SliderFloat("Vehicle velocity (m/s)", &options->vehicle_velocity, -10.0f, 40.0f);
-    ImGui::SliderFloat("Distance deviation (m)", &options->distance_deviation, -100.0f, 50.0f);
+    ImGui::SliderFloat("Vehicle velocity (m/s)", &options->vehicle_velocity, -10.0f, 55.5f);
+    ImGui::SliderFloat("Target velocity (m/s)", &options->target_velocity, -10.0f, 55.5f);
+    ImGui::SliderFloat("Distance deviation (m)", &options->distance_deviation, -150.0f, 50.0f);
     ImGui::Text("Camera");
     ImGui::SliderFloat("Velocity (m/s)", &options->camera_velocity, 0.0f, 20.0f);
     ImGui::SliderFloat("Sensitivity", &options->camera_sensitivity, 0.0f, 0.1f);

@@ -3,25 +3,26 @@
 
 
 #include <glm/glm.hpp>
-#include "engine/entity.h"
-#include "opengl/rectangle.h"
+#include "opengl/renderer.h"
+#include "deviation_animation.h"
+#include "meter.h"
 
 
 namespace hmi {
 
 
-class Deviation_meter final : public apeiron::engine::Entity
+class Deviation_meter final
 {
 public:
   Deviation_meter();
-  void set_deviation(float deviation);
-  glm::vec4 color() const { return color_; }
-  void render() const override { meter_.render(); }
-
+  void set_longitudinal_deviation(float deviation);
+  glm::vec4 longitudinal_color() const;
+  void update(float delta_time);
+  void render(apeiron::opengl::Renderer& renderer, bool animated = true);
 
 private:
-  apeiron::opengl::Rectangle meter_;
-  glm::vec4 color_ = glm::vec4{1.0f, 1.0f, 1.0f, 1.0f};
+  Meter longitudinal_meter_;
+  Deviation_animation longitudinal_animation_;
 };
 
 

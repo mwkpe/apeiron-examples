@@ -2,6 +2,7 @@
 #define HMI_DEVIATION_GAUGE_H
 
 
+#include <glm/glm.hpp>
 #include "engine/text.h"
 #include "opengl/charset.h"
 #include "opengl/renderer.h"
@@ -19,6 +20,7 @@ public:
 
 private:
   float deviation_ = 0.0f;
+  glm::vec4 deviation_color_ = glm::vec4{1.0f, 1.0f, 1.0f, 1.0f};
   apeiron::opengl::Charset* charset_ = nullptr;
   apeiron::engine::Text deviation_header_text_;
   apeiron::engine::Text deviation_text_;

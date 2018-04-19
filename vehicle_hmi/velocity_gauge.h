@@ -2,6 +2,7 @@
 #define HMI_VELOCITY_GAUGE_H
 
 
+#include <glm/glm.hpp>
 #include "gauge.h"
 #include "engine/text.h"
 #include "opengl/charset.h"
@@ -21,6 +22,7 @@ public:
 private:
   float current_velocity_ = 0.0f;
   float target_velocity_ = 0.0f;
+  glm::vec4 current_velocity_color_ = glm::vec4{1.0f, 1.0f, 1.0f, 1.0f};
   Gauge current_velocity_gauge_;
   Gauge target_velocity_gauge_;
   Gauge target_velocity_notch_;

@@ -98,7 +98,7 @@ hmi::Position_marker::Position_marker() : cross_{build_cross_vertices(0.05f)},
     triangle_{build_triangle_vertices(1.0f, 0.5f * std::sqrt(3.0f))}
 {
   set_rotation(glm::radians(-90.0f), 0.0f, 0.0f);
-  apeiron::engine::Entity::set_position(0.0f, 0.15f, 0.0f);
+  apeiron::engine::Entity::set_position(0.0f, 0.05f, 0.0f);
   set_style(style_);
 }
 
@@ -110,7 +110,7 @@ void hmi::Position_marker::set_style(Style style)
     case Style::Cross:
       [[fallthrough]];
     case Style::Target:
-      set_scale(6.0f, 0.0f, 6.0f);
+      set_scale(5.5f, 1.0f, 5.5f);
       break;
   }
 }
@@ -122,7 +122,7 @@ void hmi::Position_marker::set_position(float x, float y)
     case Style::Cross:
       [[fallthrough]];
     case Style::Target:
-      apeiron::engine::Entity::set_position(x, 0.15f, y);
+      apeiron::engine::Entity::set_position(x, 0.075f, y);
       break;
   }
 }

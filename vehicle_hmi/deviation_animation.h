@@ -13,18 +13,21 @@ class Deviation_animation final : public apeiron::engine::Entity
 {
 public:
   Deviation_animation();
-  void set_deviation(float distance);
+  void set_distance(float distance, float angle);
+  void set_velocity(float velocity) { velocity_ = velocity; };
+  void set_gap_size(float gap_size) { gap_size_ = gap_size; }
   float distance() const { return distance_; }
-  float triangle_gap() const { return triangle_gap_; };
-  float triangle_start() const { return triangles_start_; }
+  float gap_size() const { return gap_size_; };
+  float start() const { return start_; }
   void update(float delta_time);
   void render() const override;
 
 private:
   float triangle_height_;
-  float triangles_start_ = 0.0f;
-  float triangle_gap_ = 5.0f;
+  float start_ = 0.0f;
+  float gap_size_ = 5.0f;
   float distance_ = 0.0f;
+  float velocity_ = 1.0f;
   apeiron::opengl::Polygon triangle_;
 };
 

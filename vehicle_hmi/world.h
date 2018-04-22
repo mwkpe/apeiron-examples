@@ -13,7 +13,6 @@
 #include "ground.h"
 #include "road.h"
 #include "line_markings.h"
-#include "position_marker.h"
 #include "deviation_meter.h"
 #include "deviation_animation.h"
 #include "gauge.h"
@@ -54,7 +53,6 @@ private:
   Ground ground_;
   Road road_;
   Line_markings line_markings_;
-  Position_marker target_position_;
   Deviation_meter deviation_meter_;
   Deviation_gauge deviation_gauge_;
   Velocity_gauge velocity_gauge_;

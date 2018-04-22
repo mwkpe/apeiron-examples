@@ -21,11 +21,11 @@ void hmi::World::init()
   ego_vehicle_.load_model("assets/bmw.obj", mf::vertices | mf::normals | mf::tex_coords);
   ego_vehicle_.load_texture("assets/bmw.png");
   ego_vehicle_.set_center(0.0f, ego_vehicle_.size().y / 2.0f, 0.0f);
-  ego_vehicle_.set_color({0.611f, 0.152f, 0.690f, 1.0f});
+  ego_vehicle_.set_color({0.129f, 0.588f, 0.952f, 1.0f});
 
   target_vehicle_.load_model("assets/audi.obj", mf::vertices | mf::normals | mf::tex_coords);
   target_vehicle_.load_texture("assets/audi.png");
-  target_vehicle_.set_position(3.6f, 0.0f, 65.0f);
+  target_vehicle_.set_position(3.6f, 0.0f, 75.0f);
   target_vehicle_.set_center(0.0f, target_vehicle_.size().y / 2.0f, 0.0f);
   target_vehicle_.set_color({0.956f, 0.262f, 0.211f, 1.0f});
 
@@ -48,9 +48,12 @@ void hmi::World::set_camera(int i)
       camera_.set({0.0f, 40.0f, 30.0f}, -50.0f, -90.0f);
       break;
     case 1:
-      camera_.set({0.0f, 25.0f, 40.0f}, -32.0f, -90.0f);
+      camera_.set({0.0f, 25.0f, 35.0f}, -33.0f, -90.0f);
       break;
     case 2:
+      camera_.set({0.0f, 20.0f, 35.0f}, -30.0f, -90.0f);
+      break;
+    case 3:
       camera_.set({25.0f, 40.0f, 40.0f}, -40.0f, -125.0f);
       break;
     default:;
@@ -78,10 +81,10 @@ void hmi::World::update([[maybe_unused]] float time, float delta_time, const ape
   if (options_->vehicle_velocity != ego_vehicle_.velocity())
     ego_vehicle_.set_velocity(options_->vehicle_velocity);
 
-  deviation_meter_.set_longitudinal_deviation(options_->distance_deviation);
+  deviation_meter_.set_longitudinal_deviation(options_->position_deviation);
+  deviation_meter_.set_lateral_deviation(options_->lane_deviation);
   deviation_meter_.update(delta_time);
-  deviation_gauge_.set_value(options_->distance_deviation);
-  target_position_.set_position(0.0f, options_->distance_deviation);
+  deviation_gauge_.set_value(options_->position_deviation);
   velocity_gauge_.update(options_->vehicle_velocity, options_->target_velocity);
 
   float ground_z = ground_.position().z;
@@ -129,7 +132,6 @@ void hmi::World::render()
 
   if (options_->ground_overlay) {
     deviation_meter_.render(renderer_, options_->animate_overlay);
-    renderer_.render(target_position_, deviation_meter_.longitudinal_color());
   }
 
   if (options_->bounding_boxes) {

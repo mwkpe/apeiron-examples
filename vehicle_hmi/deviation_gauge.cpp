@@ -44,9 +44,9 @@ void hmi::Deviation_gauge::set_value(float deviation)
   else
     deviation_text_.set_position(-16.0f, 0.1f, 10.0f);
 
-  if (std::abs(dev) < 5)
+  if (std::abs(deviation) < 5)
     deviation_color_ = glm::vec4{0.0f, 0.717f, 0.215f, 1.0f};
-  else if (std::abs(dev) < 15)
+  else if (std::abs(deviation) < 15)
     deviation_color_ = glm::vec4{1.0f, 0.839f, 0.0f, 1.0f};
   else
   deviation_color_ = glm::vec4{0.956f, 0.317f, 0.117f, 1.0f};

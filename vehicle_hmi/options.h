@@ -34,7 +34,8 @@ struct Options
   std::uint16_t port = 30001;
   float vehicle_velocity = 0.0f;
   float target_velocity = 32.0f;
-  float distance_deviation = 1.0f;
+  float position_deviation = 0.0f;
+  float lane_deviation = 0.0f;
 };
 
 

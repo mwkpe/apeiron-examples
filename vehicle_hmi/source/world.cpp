@@ -28,16 +28,6 @@ void hmi::World::init()
   target_vehicle_.set_position(3.6f, 0.0f, 75.0f);
   target_vehicle_.set_center(0.0f, target_vehicle_.size().y / 2.0f, 0.0f);
   target_vehicle_.set_color({0.956f, 0.262f, 0.211f, 1.0f});
-
-  roman_.set_text("Roman");
-  roman_.set_position(0.0f, -1.0f, 0.0f);
-  roman_.set_spacing(0.95f, 1.0f);
-}
-
-
-void hmi::World::reset()
-{
-  camera_.reset();
 }
 
 
@@ -120,7 +110,6 @@ void hmi::World::render()
   if (options_->road) {
     renderer_.render(road_, road_.color());
     renderer_.render(line_markings_, line_markings_.color());
-    renderer_.render(roman_, roboto_mono_);
   }
 
   if (options_->ground_overlay) {

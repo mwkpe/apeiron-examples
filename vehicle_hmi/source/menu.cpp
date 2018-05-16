@@ -77,7 +77,7 @@ void hmi::Menu::build(Options* options, float time)
 
   create_frame();
   {
-    ImGui::Begin("Debug view");
+    ImGui::Begin("Debug view (F1)");
     ImGui::Text("Runtime: %.0f s", time);
     ImGui::Text("Framerate: %.0f fps", io.Framerate);
     ImGui::Text("Frametime: %.1f ms", 1000.0f / io.Framerate);
@@ -92,14 +92,15 @@ void hmi::Menu::build(Options* options, float time)
     ImGui::Checkbox("Ground", &options->ground);
     ImGui::SameLine();
     ImGui::Checkbox("Road", &options->road);
-    ImGui::Checkbox("Ground overlay", &options->ground_overlay);
     ImGui::SameLine();
-    ImGui::Checkbox("Animate overlay", &options->animate_overlay);
+    ImGui::Checkbox("Overlay", &options->ground_overlay);
+    ImGui::SameLine();
+    ImGui::Checkbox("Animate", &options->animate_overlay);
     ImGui::Text("Vehicle");
-    ImGui::SliderFloat("Vehicle (m/s)", &options->vehicle_velocity, -10.0f, 55.5f);
-    ImGui::SliderFloat("Position deviation (m)", &options->position_deviation, -150.0f, 50.0f);
+    ImGui::SliderFloat("Velocity (m/s)", &options->vehicle_velocity, -10.0f, 55.5f);
+    ImGui::SliderFloat("Position (m)", &options->position_deviation, -50.0f, 50.0f);
     ImGui::Text("Camera");
-    ImGui::SliderFloat("Velocity (m/s)", &options->camera_velocity, 0.0f, 20.0f);
+    ImGui::SliderFloat("Speed (m/s)", &options->camera_velocity, 0.0f, 20.0f);
     ImGui::SliderFloat("Sensitivity", &options->camera_sensitivity, 0.0f, 0.1f);
     if (ImGui::Button("Quit"))
       options->quit = true;

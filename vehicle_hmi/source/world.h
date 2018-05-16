@@ -38,7 +38,6 @@ public:
       target_vehicle_{{1.916f, 1.266f, 4.396f}}
       {}
   void init();
-  void reset();
   void set_camera(int i);
   void update(float time, float delta_time, const apeiron::engine::Input* input = nullptr);
   void render();
@@ -49,7 +48,6 @@ private:
   apeiron::opengl::Charset roboto_mono_;
   apeiron::opengl::Model bulb_;
   apeiron::engine::Camera camera_;
-  apeiron::engine::Text roman_;
   Ground ground_;
   Road road_;
   Line_markings line_markings_;

@@ -95,28 +95,14 @@ void hmi::Menu::build(Options* options, float time)
     ImGui::Checkbox("Ground overlay", &options->ground_overlay);
     ImGui::SameLine();
     ImGui::Checkbox("Animate overlay", &options->animate_overlay);
-    ImGui::Text("Velocity");
+    ImGui::Text("Vehicle");
     ImGui::SliderFloat("Vehicle (m/s)", &options->vehicle_velocity, -10.0f, 55.5f);
-    ImGui::SliderFloat("Target (m/s)", &options->target_velocity, -10.0f, 55.5f);
-    ImGui::Text("Deviation");
-    ImGui::SliderFloat("Position (m)", &options->position_deviation, -150.0f, 50.0f);
-    ImGui::SliderFloat("Lane (m)", &options->lane_deviation, -10.0f, 10.0f);
+    ImGui::SliderFloat("Position deviation (m)", &options->position_deviation, -150.0f, 50.0f);
     ImGui::Text("Camera");
     ImGui::SliderFloat("Velocity (m/s)", &options->camera_velocity, 0.0f, 20.0f);
     ImGui::SliderFloat("Sensitivity", &options->camera_sensitivity, 0.0f, 0.1f);
     if (ImGui::Button("Quit"))
       options->quit = true;
-    ImGui::End();
-
-    ImGui::Begin("Networking");
-    static std::array<char, 32> ip{"192.168.1.100"};
-    int port = options->port;
-    ImGui::InputText("IP", ip.data(), sizeof(ip));
-    options->ip = ip.data();
-    ImGui::InputInt("Port", &port);
-    options->port = static_cast<std::uint16_t>(port);
-    if (ImGui::Button("Connect")) {
-    }
     ImGui::End();
   }
 }

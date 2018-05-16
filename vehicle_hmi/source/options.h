@@ -30,12 +30,8 @@ struct Options
   int max_fps = 90;
   float camera_velocity = 10.0f;
   float camera_sensitivity = 0.02f;
-  std::string ip = "192.168.1.100";
-  std::uint16_t port = 30001;
   float vehicle_velocity = 0.0f;
-  float target_velocity = 32.0f;
   float position_deviation = 0.0f;
-  float lane_deviation = 0.0f;
 };
 
 

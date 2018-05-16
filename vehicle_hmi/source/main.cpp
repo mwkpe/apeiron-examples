@@ -125,7 +125,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
               break;
             case SDLK_F4:
               world.set_camera(camera_position++);
-              if (camera_position > 3)
+              if (camera_position > 1)
                 camera_position = 0;
               break;
             case SDLK_F6:

@@ -48,12 +48,6 @@ void hmi::World::set_camera(int i)
       camera_.set({0.0f, 40.0f, 30.0f}, -50.0f, -90.0f);
       break;
     case 1:
-      camera_.set({0.0f, 25.0f, 35.0f}, -33.0f, -90.0f);
-      break;
-    case 2:
-      camera_.set({0.0f, 20.0f, 35.0f}, -30.0f, -90.0f);
-      break;
-    case 3:
       camera_.set({25.0f, 40.0f, 40.0f}, -40.0f, -125.0f);
       break;
     default:;
@@ -81,11 +75,10 @@ void hmi::World::update([[maybe_unused]] float time, float delta_time, const ape
   if (options_->vehicle_velocity != ego_vehicle_.velocity())
     ego_vehicle_.set_velocity(options_->vehicle_velocity);
 
-  deviation_meter_.set_longitudinal_deviation(options_->position_deviation);
-  deviation_meter_.set_lateral_deviation(options_->lane_deviation);
+  deviation_meter_.set_deviation(options_->position_deviation);
   deviation_meter_.update(delta_time);
   deviation_gauge_.set_value(options_->position_deviation);
-  velocity_gauge_.update(options_->vehicle_velocity, options_->target_velocity);
+  velocity_gauge_.update(options_->vehicle_velocity);
 
   float ground_z = ground_.position().z;
   ground_z += delta_time * (ego_vehicle_.velocity());

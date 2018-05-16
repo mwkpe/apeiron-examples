@@ -5,25 +5,25 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-O3 -Wall -Wextra -pedantic-errors")
 
 set(APEIRON_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/../apeiron")
-set(LIBRARY_DIRECTORY "${APEIRON_DIRECTORY}/external")
+set(APEIRON_LIBRARY_DIRECTORY "${APEIRON_DIRECTORY}/external")
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR}
     ${APEIRON_DIRECTORY}
-    ${LIBRARY_DIRECTORY}
-    ${LIBRARY_DIRECTORY}/SDL2/x86_64-w64-mingw32/include
-    ${LIBRARY_DIRECTORY}/glew/include
-    ${LIBRARY_DIRECTORY}/glm)
+    ${APEIRON_LIBRARY_DIRECTORY}
+    ${APEIRON_LIBRARY_DIRECTORY}/SDL2/x86_64-w64-mingw32/include
+    ${APEIRON_LIBRARY_DIRECTORY}/glew/include
+    ${APEIRON_LIBRARY_DIRECTORY}/glm)
 
-link_directories(${LIBRARY_DIRECTORY}/SDL2/x86_64-w64-mingw32/lib
-    ${LIBRARY_DIRECTORY}/glew/lib/Release/x64)
+link_directories(${APEIRON_LIBRARY_DIRECTORY}/SDL2/x86_64-w64-mingw32/lib
+    ${APEIRON_LIBRARY_DIRECTORY}/glew/lib/Release/x64)
 
 add_executable(vehicle_hmi
-    ${LIBRARY_DIRECTORY}/imgui/imgui.cpp
-    ${LIBRARY_DIRECTORY}/imgui/imgui.h
-    ${LIBRARY_DIRECTORY}/imgui/imgui_draw.cpp
-    ${LIBRARY_DIRECTORY}/imgui/imgui_internal.h
-    ${LIBRARY_DIRECTORY}/imgui/examples/sdl_opengl3_example/imgui_impl_sdl_gl3.cpp
-    ${LIBRARY_DIRECTORY}/imgui/examples/sdl_opengl3_example/imgui_impl_sdl_gl3.h
+    ${APEIRON_LIBRARY_DIRECTORY}/imgui/imgui.cpp
+    ${APEIRON_LIBRARY_DIRECTORY}/imgui/imgui.h
+    ${APEIRON_LIBRARY_DIRECTORY}/imgui/imgui_draw.cpp
+    ${APEIRON_LIBRARY_DIRECTORY}/imgui/imgui_internal.h
+    ${APEIRON_LIBRARY_DIRECTORY}/imgui/examples/sdl_opengl3_example/imgui_impl_sdl_gl3.cpp
+    ${APEIRON_LIBRARY_DIRECTORY}/imgui/examples/sdl_opengl3_example/imgui_impl_sdl_gl3.h
     ${APEIRON_DIRECTORY}/opengl/shader.cpp
     ${APEIRON_DIRECTORY}/opengl/shader.h
     ${APEIRON_DIRECTORY}/opengl/renderer.cpp
@@ -60,33 +60,33 @@ add_executable(vehicle_hmi
     ${APEIRON_DIRECTORY}/engine/model_loader.cpp
     ${APEIRON_DIRECTORY}/engine/model_loader.h
     ${APEIRON_DIRECTORY}/engine/model_flags.h
-    main.cpp
-    options.cpp
-    options.h
-    menu.h
-    menu.cpp
-    world.cpp
-    world.h
-    vehicle.cpp
-    vehicle.h
-    light.h
-    ground.h
-    road.cpp
-    road.h
-    gauge.cpp
-    gauge.h
-    meter.h
-    line_markings.cpp
-    line_markings.h
-    position_marker.cpp
-    position_marker.h
-    deviation_animation.cpp
-    deviation_animation.h
-    deviation_meter.cpp
-    deviation_meter.h
-    deviation_gauge.cpp
-    deviation_gauge.h
-    velocity_gauge.cpp
-    velocity_gauge.h)
+    source/main.cpp
+    source/options.cpp
+    source/options.h
+    source/menu.h
+    source/menu.cpp
+    source/world.cpp
+    source/world.h
+    source/vehicle.cpp
+    source/vehicle.h
+    source/light.h
+    source/ground.h
+    source/road.cpp
+    source/road.h
+    source/gauge.cpp
+    source/gauge.h
+    source/meter.h
+    source/line_markings.cpp
+    source/line_markings.h
+    source/position_marker.cpp
+    source/position_marker.h
+    source/deviation_animation.cpp
+    source/deviation_animation.h
+    source/deviation_meter.cpp
+    source/deviation_meter.h
+    source/deviation_gauge.cpp
+    source/deviation_gauge.h
+    source/velocity_gauge.cpp
+    source/velocity_gauge.h)
 
 target_link_libraries(vehicle_hmi -lmingw32 -lglew32 -lglu32 -lopengl32 -lSDL2main -lSDL2)

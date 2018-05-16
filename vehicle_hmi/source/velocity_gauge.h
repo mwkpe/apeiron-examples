@@ -16,20 +16,16 @@ class Velocity_gauge final
 {
 public:
   Velocity_gauge(apeiron::opengl::Charset* charset);
-  void update(float current_velocity, float target_velocity);
+  void update(float velocity);
   void render(apeiron::opengl::Renderer& renderer) const;
 
 private:
-  float current_velocity_ = 0.0f;
-  float target_velocity_ = 0.0f;
-  glm::vec4 current_velocity_color_ = glm::vec4{1.0f, 1.0f, 1.0f, 1.0f};
-  Gauge current_velocity_gauge_;
-  Gauge target_velocity_gauge_;
-  Gauge target_velocity_notch_;
+  float velocity_ = 0.0f;
+  glm::vec4 color_ = glm::vec4{0.129f, 0.588f, 0.952f, 1.0f};
+  Gauge gauge_;
   apeiron::opengl::Charset* charset_ = nullptr;
-  apeiron::engine::Text current_velocity_text_;
-  apeiron::engine::Text current_velocity_unit_text_;
-  apeiron::engine::Text target_velocity_text_;
+  apeiron::engine::Text velocity_text_;
+  apeiron::engine::Text unit_text_;
 };
 
 

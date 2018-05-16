@@ -9,7 +9,7 @@ void example::World::init()
   renderer_.init();
   renderer_.use_vertex_color_shading();
   renderer_.set_lighting(false);
-  auto aspect_ratio = static_cast<float>(1280 / 720);
+  auto aspect_ratio = static_cast<float>(1280) / 720;
   renderer_.set_projection(glm::perspective(glm::radians(45.0f), aspect_ratio, 1.0f, 1000.0f));
 
   camera_.set({0.0f, -200.0f, 00.0f}, -50.0f, -45.0f);

@@ -40,7 +40,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
   SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
   SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 1);
 
-  auto* window = SDL_CreateWindow("HMI", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
+  auto* window = SDL_CreateWindow("Point cloud", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
       1280, 720, SDL_WINDOW_OPENGL);
   auto context = SDL_GL_CreateContext(window);
 

@@ -4,7 +4,6 @@
 #include <vector>
 #include <fstream>
 #include <regex>
-#include <iostream>
 
 
 void example::Point_cloud::load_data(std::string_view filename)

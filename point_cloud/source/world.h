@@ -2,8 +2,6 @@
 #define EXAMPLE_WORLD_H
 
 
-#include <cstdint>
-#include <vector>
 #include "engine/input.h"
 #include "engine/camera.h"
 #include "opengl/renderer.h"

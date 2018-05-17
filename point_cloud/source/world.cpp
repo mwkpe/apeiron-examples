@@ -21,7 +21,8 @@ void example::World::init()
 }
 
 
-void example::World::update([[maybe_unused]] float time, float delta_time, const apeiron::engine::Input* input)
+void example::World::update([[maybe_unused]] float time, float delta_time,
+    const apeiron::engine::Input* input)
 {
   if (input) {
     using Direction = apeiron::engine::Camera::Direction;

@@ -93,6 +93,7 @@ void hmi::Menu::build(Options* options, float time)
     ImGui::SameLine();
     ImGui::Checkbox("Road", &options->road);
     ImGui::SameLine();
+    ImGui::Checkbox("Markings", &options->road_markings);
     ImGui::Checkbox("Overlay", &options->ground_overlay);
     ImGui::SameLine();
     ImGui::Checkbox("Animate", &options->animate_overlay);

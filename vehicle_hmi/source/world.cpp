@@ -35,7 +35,7 @@ void hmi::World::set_camera(int i)
 {
   switch (i) {
     case 0:
-      camera_.set({0.0f, 40.0f, 30.0f}, -50.0f, -90.0f);
+      camera_.set({0.0f, 35.0f, 25.0f}, -55.0f, -90.0f);
       break;
     case 1:
       camera_.set({25.0f, 40.0f, 40.0f}, -40.0f, -125.0f);
@@ -109,6 +109,9 @@ void hmi::World::render()
 
   if (options_->road) {
     renderer_.render(road_, road_.color());
+  }
+
+  if (options_->road_markings) {
     renderer_.render(line_markings_, line_markings_.color());
   }
 

@@ -22,6 +22,7 @@ struct Options
   bool ground_overlay = true;
   bool animate_overlay = true;
   bool road = true;
+  bool road_markings = true;
   bool limit_fps = true;
   int window_width = 1280;
   int window_height = 720;

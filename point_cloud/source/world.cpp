@@ -12,7 +12,7 @@ void example::World::init()
   auto aspect_ratio = static_cast<float>(1280) / 720;
   renderer_.set_projection(glm::perspective(glm::radians(45.0f), aspect_ratio, 1.0f, 1000.0f));
 
-  camera_.set({75.0f, -240.0f, -40.0f}, -35.0f, -190.0f);
+  camera_.set({25.0f, 60.0f, -40.0f}, -35.0f, -190.0f);
 
   point_cloud_.load_data("MOUT_script3.xyzrgba");
   point_cloud_.set_point_size(2.0f);

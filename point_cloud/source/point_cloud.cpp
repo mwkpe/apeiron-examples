@@ -24,9 +24,9 @@ void example::Point_cloud::load_data(std::string_view filename)
         float g = std::stof(m[5]);
         float b = std::stof(m[6]);
         // Translation offset
-        data.push_back(x + 50.0f);
+        data.push_back(x);
         data.push_back(y + 650.0f);
-        data.push_back(z - 400.0f);
+        data.push_back(z - 100.0f);
         // Negative values indicate missing color information
         data.push_back(r < 0 ? 1.0f : r);
         data.push_back(g < 0 ? 0.0f : g);

@@ -100,14 +100,19 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
-      menu.process(&event);
+      if (options.show_menu) {
+        menu.process(&event);
+      }
       options.quit = event.type == SDL_QUIT;
       switch (event.type) {
         case SDL_KEYDOWN: {
           switch (event.key.keysym.sym) {
+            case SDLK_ESCAPE:
+              quit = true;
+              break;
             case SDLK_F1:
-              options.show_gui = !options.show_gui;
-              if (options.show_gui) {
+              options.show_menu = !options.show_menu;
+              if (options.show_menu) {
                 SDL_CaptureMouse(SDL_FALSE);
                 SDL_SetRelativeMouseMode(SDL_FALSE);
               }
@@ -138,7 +143,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
       }
     }
 
-    if (!options.show_gui) {
+    if (!options.show_menu) {
       auto input = get_input_state();
       world.update(time, delta_time, &input);
     }
@@ -155,7 +160,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     world.render();
-    if (options.show_gui) {
+    if (options.show_menu) {
       menu.build(&options, time);
       menu.render();
     }

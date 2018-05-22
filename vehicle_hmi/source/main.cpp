@@ -108,7 +108,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
         case SDL_KEYDOWN: {
           switch (event.key.keysym.sym) {
             case SDLK_ESCAPE:
-              quit = true;
+              options.quit = true;
               break;
             case SDLK_F1:
               options.show_menu = !options.show_menu;

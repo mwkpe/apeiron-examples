@@ -9,7 +9,7 @@ namespace {
 
 std::vector<float> build_line_markings(int length = 200)
 {
-  float line_width = 0.2f;
+  float line_width = 0.3f;
   float line_length = 6.0f;
   float line_gap = 12.0f;
   float lane_width = 3.6f;

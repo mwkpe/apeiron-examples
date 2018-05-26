@@ -22,8 +22,8 @@ add_executable(vehicle_hmi
     ${APEIRON_LIBRARY_DIRECTORY}/imgui/imgui.h
     ${APEIRON_LIBRARY_DIRECTORY}/imgui/imgui_draw.cpp
     ${APEIRON_LIBRARY_DIRECTORY}/imgui/imgui_internal.h
-    ${APEIRON_LIBRARY_DIRECTORY}/imgui/examples/sdl_opengl3_example/imgui_impl_sdl_gl3.cpp
-    ${APEIRON_LIBRARY_DIRECTORY}/imgui/examples/sdl_opengl3_example/imgui_impl_sdl_gl3.h
+    ${APEIRON_LIBRARY_DIRECTORY}/imgui/imgui_impl_sdl_gl3.cpp
+    ${APEIRON_LIBRARY_DIRECTORY}/imgui/imgui_impl_sdl_gl3.h
     ${APEIRON_DIRECTORY}/opengl/shader.cpp
     ${APEIRON_DIRECTORY}/opengl/shader.h
     ${APEIRON_DIRECTORY}/opengl/renderer.cpp

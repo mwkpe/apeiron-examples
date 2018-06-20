@@ -3,26 +3,26 @@
 
 #include <vector>
 #include <fstream>
-#include <regex>
+#include "string_utils.h"
 
 
 void example::Point_cloud::load_data(std::string_view filename)
 {
+  using namespace nonstd::string_utils;
   std::vector<float> data;
-  std::string s = std::string{filename};
-  if (std::ifstream file{s}; file.is_open()) {
+
+  if (std::ifstream file{std::string{filename}}; file.is_open()) {
     std::string line;
-    // Frame, x, y, z, r, g, b, a
-    std::regex rx{R"(^\d+\s([^\s]+)\s([^\s]+)\s([^\s]+)\s([^\s]+)\s([^\s]+)\s([^\s]+).+)"};
-    std::smatch m;
     while (getline(file, line)) {
-      if (std::regex_match(line, m, rx)) {
-        float x = std::stof(m[1]);
-        float y = std::stof(m[2]);
-        float z = std::stof(m[3]);
-        float r = std::stof(m[4]);
-        float g = std::stof(m[5]);
-        float b = std::stof(m[6]);
+      // Frame x y z r g b a
+      auto values = split_copy(line, " ");
+      if (values.size() == 8) {
+        float x = std::stof(values[1]);
+        float y = std::stof(values[2]);
+        float z = std::stof(values[3]);
+        float r = std::stof(values[4]);
+        float g = std::stof(values[5]);
+        float b = std::stof(values[6]);
         // Translation offset
         data.push_back(x);
         data.push_back(y + 650.0f);

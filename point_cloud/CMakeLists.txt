@@ -37,6 +37,7 @@ add_executable(point_cloud
     ${APEIRON_DIRECTORY}/engine/image_loader.h
     ${APEIRON_DIRECTORY}/engine/camera.cpp
     ${APEIRON_DIRECTORY}/engine/camera.h
+    source/string_utils.h
     source/main.cpp
     source/point_cloud.cpp
     source/point_cloud.h

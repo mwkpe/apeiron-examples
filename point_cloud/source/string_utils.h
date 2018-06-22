@@ -6,8 +6,9 @@
 #include <string_view>
 #include <locale>
 #include <vector>
-#if __has_include(<charconv>)
+#if __GNUC__ == 8 && __has_include(<charconv>)
   #define NONSTD_STRING_UTILS_CHARCONV
+  #define NONSTD_STRING_UTILS_CHARCONV_INTEGRAL_TYPES_ONLY
   #include <charconv>
 #endif
 
@@ -26,10 +27,10 @@ template<typename I, typename F> inline void transform(I start, I stop, F func)
 
 
 #ifdef NONSTD_STRING_UTILS_CHARCONV
-  template <typename T> inline T parse_number(std::string_view sv)
+  template <typename T> inline T parse_number(std::string_view sv, int base = 10)
   {
     T value{};
-    std::from_chars(sv.data(), sv.data() + sv.size(), value);
+    std::from_chars(sv.data(), sv.data() + sv.size(), value, base);
     return value;
   }
 #endif  // NONSTD_STRING_UTILS_CHARCONV
@@ -162,6 +163,52 @@ template <typename T> inline T rbetween(std::string_view sv, std::string_view fi
     return T{sv.substr(j + first_token.size(), i - j - first_token.size())};
   }
   return T{};
+}
+
+
+inline std::string replace(std::string_view sv, std::string_view search_token,
+    std::string_view replace_token)
+{
+  std::vector<std::size_t> positions;
+  auto pos = sv.find(search_token);
+  while (pos != sv.npos) {
+    positions.push_back(pos);
+    pos = sv.find(search_token, pos + search_token.size());
+  }
+  if (positions.empty())
+    return std::string{sv};
+
+  std::string result;
+  auto n = positions.size();
+  result.resize(sv.size() - search_token.size() * n + replace_token.size() * n);
+  auto result_it = std::begin(result);
+  auto source_it = std::begin(sv);
+  for (auto p : positions) {
+    result_it = std::copy(source_it, std::begin(sv) + p, result_it);
+    result_it = std::copy(std::begin(replace_token), std::end(replace_token), result_it);
+    source_it = std::begin(sv) + p + search_token.size();
+  }
+  if (result_it != std::end(result)) {
+    std::copy(source_it, std::end(sv), result_it);
+  }
+
+  return result;
+}
+
+
+inline std::string replace_inplace(std::string_view sv, std::string_view search_token,
+    std::string_view replace_token)
+{
+  std::string result{sv};
+  auto result_it = std::begin(result);
+  auto pos = sv.find(search_token);
+
+  while (pos != sv.npos) {
+    result_it = std::copy(std::begin(replace_token), std::end(replace_token), std::begin(result) + pos);
+    pos = sv.find(search_token, pos + search_token.size());
+  }
+
+  return result;
 }
 
 
@@ -375,53 +422,108 @@ inline std::string rbetween_copy(std::string_view sv, std::string_view first_tok
 inline std::string replace(std::string_view sv, std::string_view search_token,
     std::string_view replace_token)
 {
-  std::vector<std::size_t> positions;
-  auto pos = sv.find(search_token);
-  while (pos != sv.npos) {
-    positions.push_back(pos);
-    pos = sv.find(search_token, pos + search_token.size());
-  }
-  if (positions.empty())
-    return std::string{sv};
-
-  std::string result;
-  auto n = positions.size();
-  result.resize(sv.size() - search_token.size() * n + replace_token.size() * n);
-  auto result_it = std::begin(result);
-  auto source_it = std::begin(sv);
-  for (auto p : positions) {
-    result_it = std::copy(source_it, std::begin(sv) + p, result_it);
-    result_it = std::copy(std::begin(replace_token), std::end(replace_token), result_it);
-    source_it = std::begin(sv) + p + search_token.size();
-  }
-  if (result_it != std::end(result)) {
-    std::copy(source_it, std::end(sv), result_it);
-  }
-
-  return result;
+  if (search_token.size() == replace_token.size())
+    return detail::replace_inplace(sv, search_token, replace_token);
+  return detail::replace(sv, search_token, replace_token);
 }
 
 
 #ifdef NONSTD_STRING_UTILS_CHARCONV
-  inline int to_int(std::string_view sv)
+  inline std::string as_string(std::string_view sv)
   {
-    return detail::parse_number<int>(sv);
+    return std::string{sv};
   }
 
 
-// Not yet supported by GCC 8
-//
-
-//  inline float to_float(std::string_view sv)
-//  {
-//    return detail::parse_number<float>(sv);
-//  }
+  inline int as_int(std::string_view sv, int base = 10)
+  {
+    return detail::parse_number<int>(sv, base);
+  }
 
 
-//  inline double to_double(std::string_view sv)
-//  {
-//    return detail::parse_number<double>(sv);
-//  }
+  inline std::uint8_t as_uint8(std::string_view sv, int base = 10)
+  {
+    return detail::parse_number<std::uint8_t>(sv, base);
+  }
+
+
+  inline std::uint16_t as_uint16(std::string_view sv, int base = 10)
+  {
+    return detail::parse_number<std::uint16_t>(sv, base);
+  }
+
+
+  inline std::uint32_t as_uint32(std::string_view sv, int base = 10)
+  {
+    return detail::parse_number<std::uint32_t>(sv, base);
+  }
+
+
+  inline std::uint64_t as_uint64(std::string_view sv, int base = 10)
+  {
+    return detail::parse_number<std::uint64_t>(sv, base);
+  }
+
+
+  inline std::int8_t as_int8(std::string_view sv, int base = 10)
+  {
+    return detail::parse_number<std::int8_t>(sv, base);
+  }
+
+
+  inline std::int16_t as_int16(std::string_view sv, int base = 10)
+  {
+    return detail::parse_number<std::int16_t>(sv, base);
+  }
+
+
+  inline std::int32_t as_int32(std::string_view sv, int base = 10)
+  {
+    return detail::parse_number<std::int32_t>(sv, base);
+  }
+
+
+  inline std::int64_t as_int64(std::string_view sv, int base = 10)
+  {
+    return detail::parse_number<std::int64_t>(sv, base);
+  }
+
+  
+  #ifdef NONSTD_STRING_UTILS_CHARCONV_INTEGRAL_TYPES_ONLY
+    inline float as_float(std::string_view sv)
+    {
+      return std::stof(std::string{sv});
+    }
+
+
+    inline double as_double(std::string_view sv)
+    {
+      return std::stod(std::string{sv});
+    }
+
+
+    inline long double as_longdouble(std::string_view sv)
+    {
+      return std::stold(std::string{sv});
+    }
+  #else
+    inline float as_float(std::string_view sv)
+    {
+      return detail::parse_number<float>(sv);
+    }
+
+
+    inline double as_double(std::string_view sv)
+    {
+      return detail::parse_number<double>(sv);
+    }
+
+
+    inline long double as_longdouble(std::string_view sv)
+    {
+      return detail::parse_number<long double>(sv);
+    }
+  #endif
 #endif  // NONSTD_STRING_UTILS_CHARCONV
 
 

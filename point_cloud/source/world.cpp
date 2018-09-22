@@ -1,23 +1,24 @@
 #include "world.h"
 
 
+#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
 
-void example::World::init()
+void example::World::init(int screen_width, int screen_height)
 {
-  renderer_.init();
+  renderer_.init(static_cast<float>(screen_width), static_cast<float>(screen_height));
   renderer_.use_vertex_color_shading();
   renderer_.set_lighting(false);
-  auto aspect_ratio = static_cast<float>(1280) / 720;
+  auto aspect_ratio = static_cast<float>(screen_width) / screen_height;
   renderer_.set_projection(glm::perspective(glm::radians(45.0f), aspect_ratio, 1.0f, 1000.0f));
 
   camera_.set({25.0f, 60.0f, -40.0f}, -35.0f, -190.0f);
 
   point_cloud_.load_data("MOUT_script3.xyzrgba");
   point_cloud_.set_point_size(2.0f);
-  auto plane_rotation = glm::vec3{glm::radians(-90.0f), 0.0f, 0.0f};
-  point_cloud_.set_rotation(plane_rotation);
+  // Rotate point cloud z-up to opengl y-up
+  point_cloud_.set_rotation(glm::vec3{glm::radians(-90.0f), 0.0f, 0.0f});
 }
 
 

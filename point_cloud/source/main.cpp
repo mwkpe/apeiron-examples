@@ -40,8 +40,11 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
   SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
   SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 1);
 
+  int screen_width = 1280;
+  int screen_height = 720;
+
   auto* window = SDL_CreateWindow("Point cloud", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-      1280, 720, SDL_WINDOW_OPENGL);
+      screen_width, screen_height, SDL_WINDOW_OPENGL);
   auto context = SDL_GL_CreateContext(window);
 
   glewExperimental = GL_TRUE;
@@ -57,7 +60,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 
   example::World world;
   try {
-    world.init();
+    world.init(screen_width, screen_height);
   }
   catch (const apeiron::engine::Error& e) {
     std::cerr << e.what() << std::endl;

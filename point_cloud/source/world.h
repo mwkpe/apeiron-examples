@@ -14,7 +14,7 @@ namespace example {
 class World final
 {
 public:
-  void init();
+  void init(int screen_width, int screen_height);
   void update(float time, float delta_time, const apeiron::engine::Input* input = nullptr);
   void render();
 

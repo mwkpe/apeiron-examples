@@ -24,8 +24,8 @@ add_executable(point_cloud
     ${APEIRON_DIRECTORY}/opengl/renderer.h
     ${APEIRON_DIRECTORY}/opengl/texture.cpp
     ${APEIRON_DIRECTORY}/opengl/texture.h
-    ${APEIRON_DIRECTORY}/opengl/charset.cpp
-    ${APEIRON_DIRECTORY}/opengl/charset.h
+    ${APEIRON_DIRECTORY}/opengl/tileset.cpp
+    ${APEIRON_DIRECTORY}/opengl/tileset.h
     ${APEIRON_DIRECTORY}/opengl/shape.cpp
     ${APEIRON_DIRECTORY}/opengl/shape.h
     ${APEIRON_DIRECTORY}/opengl/points.cpp

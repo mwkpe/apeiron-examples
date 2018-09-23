@@ -3,7 +3,7 @@
 
 
 #include "engine/entity.h"
-#include "opengl/polygon.h"
+#include "opengl/triangles.h"
 
 
 namespace hmi {
@@ -28,7 +28,7 @@ private:
   float gap_size_ = 5.0f;
   float distance_ = 0.0f;
   float velocity_ = 1.0f;
-  apeiron::opengl::Polygon triangle_;
+  apeiron::opengl::Triangles triangle_;
 };
 
 

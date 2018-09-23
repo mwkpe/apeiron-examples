@@ -3,7 +3,7 @@
 
 
 #include "engine/entity.h"
-#include "opengl/polygon.h"
+#include "opengl/triangles.h"
 
 
 namespace hmi {
@@ -21,9 +21,9 @@ public:
 
 private:
   Style style_ = Style::Target;
-  apeiron::opengl::Polygon cross_;
-  apeiron::opengl::Polygon circle_;
-  apeiron::opengl::Polygon triangle_;
+  apeiron::opengl::Triangles cross_;
+  apeiron::opengl::Triangles circle_;
+  apeiron::opengl::Triangles triangle_;
 };
 
 

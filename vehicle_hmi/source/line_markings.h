@@ -4,7 +4,7 @@
 
 #include <glm/glm.hpp>
 #include "engine/entity.h"
-#include "opengl/polygon.h"
+#include "opengl/triangles.h"
 
 
 namespace hmi {
@@ -20,7 +20,7 @@ public:
 
 
 private:
-  apeiron::opengl::Polygon lines_;
+  apeiron::opengl::Triangles lines_;
 };
 
 

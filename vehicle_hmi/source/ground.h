@@ -1,5 +1,5 @@
-#ifndef HMI_GROUND_H
-#define HMI_GROUND_H
+#ifndef APEIRON_EXAMPLE_GROUND_H
+#define APEIRON_EXAMPLE_GROUND_H
 
 
 #include <glm/glm.hpp>
@@ -7,25 +7,22 @@
 #include "opengl/grid.h"
 
 
-namespace hmi {
+namespace apeiron::example {
 
 
-class Ground final : public apeiron::engine::Entity
+class Ground final : public engine::Entity
 {
 public:
-  Ground(const glm::vec3& size, const glm::vec3& spacing, float precision, const glm::vec3& color,
-      float line_width = 1.0f) : grid_{size, spacing, precision, color, line_width} { set_position(0.0f, -0.1f, 0.0f); }
-  glm::vec3 size() const { return grid_.size(); }
-  glm::vec3 spacing() const { return grid_.spacing(); }
+  Ground(const glm::vec2& size, std::size_t x_steps, std::size_t y_steps, const glm::vec3& color,
+      float line_width = 1.0f) : grid_{size, x_steps, y_steps, color, line_width} {}
   void render() const override { grid_.render(); }
 
-
 private:
-  apeiron::opengl::Grid grid_;
+  opengl::Grid grid_;
 };
 
 
-}  // namespace hmi
+}  // namespace apeiron::example
 
 
-#endif  // HMI_GROUND_H
+#endif  // APEIRON_EXAMPLE_GROUND_H

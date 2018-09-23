@@ -32,12 +32,12 @@ add_executable(vehicle_hmi
     ${APEIRON_DIRECTORY}/opengl/shape.h
     ${APEIRON_DIRECTORY}/opengl/texture.cpp
     ${APEIRON_DIRECTORY}/opengl/texture.h
-    ${APEIRON_DIRECTORY}/opengl/charset.cpp
-    ${APEIRON_DIRECTORY}/opengl/charset.h
+    ${APEIRON_DIRECTORY}/opengl/tileset.cpp
+    ${APEIRON_DIRECTORY}/opengl/tileset.h
     ${APEIRON_DIRECTORY}/opengl/grid.cpp
     ${APEIRON_DIRECTORY}/opengl/grid.h
-    ${APEIRON_DIRECTORY}/opengl/polygon.cpp
-    ${APEIRON_DIRECTORY}/opengl/polygon.h
+    ${APEIRON_DIRECTORY}/opengl/triangles.cpp
+    ${APEIRON_DIRECTORY}/opengl/triangles.h
     ${APEIRON_DIRECTORY}/opengl/rectangle.cpp
     ${APEIRON_DIRECTORY}/opengl/rectangle.h
     ${APEIRON_DIRECTORY}/opengl/cuboid.cpp
@@ -53,7 +53,6 @@ add_executable(vehicle_hmi
     ${APEIRON_DIRECTORY}/engine/entity.h
     ${APEIRON_DIRECTORY}/engine/camera.cpp
     ${APEIRON_DIRECTORY}/engine/camera.h
-    ${APEIRON_DIRECTORY}/engine/text.cpp
     ${APEIRON_DIRECTORY}/engine/text.h
     ${APEIRON_DIRECTORY}/engine/image_loader.cpp
     ${APEIRON_DIRECTORY}/engine/image_loader.h
@@ -73,8 +72,6 @@ add_executable(vehicle_hmi
     source/ground.h
     source/road.cpp
     source/road.h
-    source/gauge.cpp
-    source/gauge.h
     source/meter.h
     source/line_markings.cpp
     source/line_markings.h
@@ -83,10 +80,6 @@ add_executable(vehicle_hmi
     source/deviation_animation.cpp
     source/deviation_animation.h
     source/deviation_meter.cpp
-    source/deviation_meter.h
-    source/deviation_gauge.cpp
-    source/deviation_gauge.h
-    source/velocity_gauge.cpp
-    source/velocity_gauge.h)
+    source/deviation_meter.h)
 
 target_link_libraries(vehicle_hmi -lmingw32 -lglew32 -lglu32 -lopengl32 -lSDL2main -lSDL2)

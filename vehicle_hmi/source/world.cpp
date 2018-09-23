@@ -1,33 +1,38 @@
 #include "world.h"
 
 
+#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "engine/model_flags.h"
 
 
 void hmi::World::init()
 {
-  namespace mf = apeiron::engine::model_flags;
-
-  set_camera(0);
-  renderer_.init();
+  renderer_.init(static_cast<float>(options_->window_width),
+      static_cast<float>(options_->window_height));
   roboto_mono_.load("assets/roboto_mono_modified.png");
 
-  bulb_.load("assets/bulb.obj", mf::vertices);
-  light_.set_position(0.0f, 5.0f, 1.0f);
-  light_.set_color(1.0f, 1.0f, 1.0f);
-  renderer_.set_light_color(light_.color());
+  {
+    namespace mf = apeiron::engine::model_flags;
 
-  ego_vehicle_.load_model("assets/bmw.obj", mf::vertices | mf::normals | mf::tex_coords);
-  ego_vehicle_.load_texture("assets/bmw.png");
-  ego_vehicle_.set_center(0.0f, ego_vehicle_.size().y / 2.0f, 0.0f);
-  ego_vehicle_.set_color({0.129f, 0.588f, 0.952f, 1.0f});
+    bulb_.load("assets/bulb.obj", mf::vertices);
+    light_.set_position(0.0f, 5.0f, 1.0f);
+    light_.set_color(1.0f, 1.0f, 1.0f);
+    renderer_.set_light_color(light_.color());
 
-  target_vehicle_.load_model("assets/audi.obj", mf::vertices | mf::normals | mf::tex_coords);
-  target_vehicle_.load_texture("assets/audi.png");
-  target_vehicle_.set_position(3.6f, 0.0f, 75.0f);
-  target_vehicle_.set_center(0.0f, target_vehicle_.size().y / 2.0f, 0.0f);
-  target_vehicle_.set_color({0.956f, 0.262f, 0.211f, 1.0f});
+    ego_vehicle_.load_model("assets/bmw.obj", mf::vertices | mf::normals | mf::texcoords);
+    ego_vehicle_.load_texture("assets/bmw.png");
+    ego_vehicle_.set_center(0.0f, ego_vehicle_.size().y / 2.0f, 0.0f);
+    ego_vehicle_.set_color({0.129f, 0.588f, 0.952f, 1.0f});
+
+    target_vehicle_.load_model("assets/audi.obj", mf::vertices | mf::normals | mf::texcoords);
+    target_vehicle_.load_texture("assets/audi.png");
+    target_vehicle_.set_position(3.6f, 0.0f, 75.0f);
+    target_vehicle_.set_center(0.0f, target_vehicle_.size().y / 2.0f, 0.0f);
+    target_vehicle_.set_color({0.956f, 0.262f, 0.211f, 1.0f});
+  }
+
+  set_camera(0);
 }
 
 
@@ -45,7 +50,8 @@ void hmi::World::set_camera(int i)
 }
 
 
-void hmi::World::update([[maybe_unused]] float time, float delta_time, const apeiron::engine::Input* input)
+void hmi::World::update([[maybe_unused]] float time, float delta_time,
+    const apeiron::engine::Input* input)
 {
   if (input) {
     using Direction = apeiron::engine::Camera::Direction;
@@ -62,13 +68,8 @@ void hmi::World::update([[maybe_unused]] float time, float delta_time, const ape
     camera_.orient(input->mouse_x_rel, input->mouse_y_rel, options_->camera_sensitivity);
   }
 
-  if (options_->vehicle_velocity != ego_vehicle_.velocity())
-    ego_vehicle_.set_velocity(options_->vehicle_velocity);
-
   deviation_meter_.set_deviation(options_->position_deviation);
   deviation_meter_.update(delta_time);
-  deviation_gauge_.set_value(options_->position_deviation);
-  velocity_gauge_.update(options_->vehicle_velocity);
 
   float ground_z = ground_.position().z;
   ground_z += delta_time * (ego_vehicle_.velocity());
@@ -130,7 +131,4 @@ void hmi::World::render()
   renderer_.render(ego_vehicle_);
   renderer_.set_light_position(target_vehicle_.position() + light_.position());
   renderer_.render(target_vehicle_);
-
-  deviation_gauge_.render(renderer_);
-  velocity_gauge_.render(renderer_);
 }

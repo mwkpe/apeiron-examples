@@ -2,59 +2,45 @@
 
 
 #include <cmath>
+#include "engine/vertex.h"
 
 
 namespace {
 
 
-std::vector<float> build_line_markings(int length = 200)
+auto build_line_markings()
 {
-  float line_width = 0.3f;
-  float line_length = 6.0f;
-  float line_gap = 12.0f;
-  float lane_width = 3.6f;
-  auto vertices_count = static_cast<std::size_t>(std::round(length * 2.0f / (line_gap + line_length) + 0.5f)) * 36;
-  std::vector<float> vertices(vertices_count);
-  std::size_t index = 0;
+  using apeiron::engine;
 
-  for (int i=length; i>-length; i-=static_cast<int>(line_gap + line_length)) {
-    vertices[index++] = lane_width / 2.0f + line_width / 2.0f;
-    vertices[index++] = static_cast<float>(i);
-    vertices[index++] = 0.0f;
-    vertices[index++] = lane_width / 2.0f - line_width / 2.0f;
-    vertices[index++] = static_cast<float>(i);
-    vertices[index++] = 0.0f;
-    vertices[index++] = lane_width / 2.0f - line_width / 2.0f;
-    vertices[index++] = static_cast<float>(i) - line_length;
-    vertices[index++] = 0.0f;
-    vertices[index++] = lane_width / 2.0f - line_width / 2.0f;
-    vertices[index++] = static_cast<float>(i) - line_length;
-    vertices[index++] = 0.0f;
-    vertices[index++] = lane_width / 2.0f + line_width / 2.0f;
-    vertices[index++] = static_cast<float>(i) - line_length;
-    vertices[index++] = 0.0f;
-    vertices[index++] = lane_width / 2.0f + line_width / 2.0f;
-    vertices[index++] = static_cast<float>(i);
-    vertices[index++] = 0.0f;
+  const float line_width = 0.3f;
+  const float line_length = 6.0f;
+  const float line_gap = 12.0f;
+  const float lane_width = 3.6f;
+  const int sections = 10;
+  // Two parallel stripes require 12 vertices
 
-    vertices[index++] = -lane_width / 2.0f + line_width / 2.0f;
-    vertices[index++] = static_cast<float>(i);
-    vertices[index++] = 0.0f;
-    vertices[index++] = -lane_width / 2.0f - line_width / 2.0f;
-    vertices[index++] = static_cast<float>(i);
-    vertices[index++] = 0.0f;
-    vertices[index++] = -lane_width / 2.0f - line_width / 2.0f;
-    vertices[index++] = static_cast<float>(i) - line_length;
-    vertices[index++] = 0.0f;
-    vertices[index++] = -lane_width / 2.0f - line_width / 2.0f;
-    vertices[index++] = static_cast<float>(i) - line_length;
-    vertices[index++] = 0.0f;
-    vertices[index++] = -lane_width / 2.0f + line_width / 2.0f;
-    vertices[index++] = static_cast<float>(i) - line_length;
-    vertices[index++] = 0.0f;
-    vertices[index++] = -lane_width / 2.0f + line_width / 2.0f;
-    vertices[index++] = static_cast<float>(i);
-    vertices[index++] = 0.0f;
+  std::vector<Vertex_simple> vertices;
+  float l = 0.0f;
+  const float w = lane_width / 2.0f;
+  const float h = 0.0f;
+
+  while (index < sections * 12) {
+    // Left stripe
+    vertices.push_back(Vertex_simple{-w - line_width, h, l});
+    vertices.push_back(Vertex_simple{-w, h, l});
+    vertices.push_back(Vertex_simple{-w, h, l + line_length});
+    vertices.push_back(Vertex_simple{-w, h, l + line_length});
+    vertices.push_back(Vertex_simple{-w - line_width, h, l + line_length});
+    vertices.push_back(Vertex_simple{-w - line_width, h, l});
+    // Right stripe
+    vertices.push_back(Vertex_simple{w, h, l});
+    vertices.push_back(Vertex_simple{w + line_width, h, l});
+    vertices.push_back(Vertex_simple{w + line_width, h, l + line_length});
+    vertices.push_back(Vertex_simple{w + line_width, h, l + line_length});
+    vertices.push_back(Vertex_simple{w, h, l + line_length});
+    vertices.push_back(Vertex_simple{w, h, l});
+
+    l += line_length + line_gap;
   }
 
   return vertices;
@@ -66,5 +52,4 @@ std::vector<float> build_line_markings(int length = 200)
 
 hmi::Line_markings::Line_markings() : lines_{build_line_markings()}
 {
-  set_rotation(glm::radians(-90.0f), 0.0f, 0.0f);
 }

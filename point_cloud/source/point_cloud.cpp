@@ -27,11 +27,11 @@ void example::Point_cloud::load_data(std::string_view filename)
         float b = std::stof(values[6]);
         float a = std::stof(values[7]);
         data.push_back(Vertex_color{
-            // Apply translation offset
-            x,
-            y + 650.0f,
-            z - 100.0f,
-            // Negative values indicate missing color information
+            // Move cloud to center
+            x + 30.0f,
+            y + 625.0f,
+            z - 128.0f,
+            // Negative values indicate missing color information, use fuchsia
             r < 0 ? 1.0f : r,
             g < 0 ? 0.0f : g,
             b < 0 ? 1.0f : b,

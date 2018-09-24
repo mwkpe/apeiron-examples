@@ -5,6 +5,11 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 
+example::World::World() : ground_{{200.0f, 200.0f}, 25, 25, {0.25f, 0.25f, 0.25f, 1.0f}}
+{
+}
+
+
 void example::World::init(int screen_width, int screen_height)
 {
   renderer_.init();
@@ -12,9 +17,8 @@ void example::World::init(int screen_width, int screen_height)
   renderer_.set_lighting(false);
   auto aspect_ratio = static_cast<float>(screen_width) / screen_height;
   renderer_.set_projection(glm::perspective(glm::radians(45.0f), aspect_ratio, 1.0f, 1000.0f));
-
-  camera_.setup(-35.0f, -190.0f, {25.0f, 60.0f, -40.0f});
-
+  camera_.setup(-30.0f, -190.0f, {55.0f, 25.0f, -15.0f});
+  
   point_cloud_.load_data("MOUT_script3.xyzrgba");
   point_cloud_.set_point_size(2.0f);
   // Rotate point cloud z-up to opengl y-up
@@ -46,5 +50,6 @@ void example::World::render()
 {
   frame_++;
   renderer_.set_view(camera_.view());
+  renderer_.render(ground_);
   renderer_.render(point_cloud_);
 }

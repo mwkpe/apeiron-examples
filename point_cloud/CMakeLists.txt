@@ -30,6 +30,8 @@ add_executable(point_cloud
     ${APEIRON_DIRECTORY}/opengl/shape.h
     ${APEIRON_DIRECTORY}/opengl/points.cpp
     ${APEIRON_DIRECTORY}/opengl/points.h
+    ${APEIRON_DIRECTORY}/opengl/grid.cpp
+    ${APEIRON_DIRECTORY}/opengl/grid.h
     ${APEIRON_DIRECTORY}/engine/error.h
     ${APEIRON_DIRECTORY}/engine/input.h
     ${APEIRON_DIRECTORY}/engine/entity.h
@@ -37,6 +39,7 @@ add_executable(point_cloud
     ${APEIRON_DIRECTORY}/engine/image_loader.h
     ${APEIRON_DIRECTORY}/engine/camera.cpp
     ${APEIRON_DIRECTORY}/engine/camera.h
+    ${APEIRON_DIRECTORY}/prefab/ground.h
     source/string_utils.h
     source/main.cpp
     source/point_cloud.cpp

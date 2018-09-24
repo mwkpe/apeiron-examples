@@ -1,12 +1,12 @@
-#ifndef HMI_MENU_H
-#define HMI_MENU_H
+#ifndef EXAMPLE_MENU_H
+#define EXAMPLE_MENU_H
 
 
 #include "opengl/gui.h"
 #include "options.h"
 
 
-namespace hmi {
+namespace example {
 
 
 class Menu final : public apeiron::opengl::Gui
@@ -18,7 +18,7 @@ public:
 };
 
 
-}  // hmi
+}  // namespace example
 
 
-#endif  // HMI_MENU_H
+#endif  // EXAMPLE_MENU_H

@@ -38,7 +38,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
   SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-  SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 1);
+  SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
 
   int screen_width = 1280;
   int screen_height = 720;

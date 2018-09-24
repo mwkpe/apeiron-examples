@@ -34,9 +34,9 @@ apeiron::engine::Input get_input_state()
 
 int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 {
-  hmi::Options options;
+  example::Options options;
   try {
-    options = hmi::load_configuration("config.json");
+    options = example::load_configuration("config.json");
   }
   catch (const apeiron::engine::Error& e) {
     std::cout << e.what() << std::endl;
@@ -50,8 +50,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
   SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
   SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, options.msaa_samples);
 
-  auto* window = SDL_CreateWindow("HMI", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-      options.window_width, options.window_height, SDL_WINDOW_OPENGL);
+  auto* window = SDL_CreateWindow("Vehicle scene", SDL_WINDOWPOS_UNDEFINED,
+      SDL_WINDOWPOS_UNDEFINED, options.window_width, options.window_height, SDL_WINDOW_OPENGL);
   auto context = SDL_GL_CreateContext(window);
 
   glewExperimental = GL_TRUE;
@@ -63,8 +63,8 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 
   SDL_GL_SetSwapInterval(0);
 
-  hmi::World world(&options);
-  hmi::Menu menu(window);
+  example::World world(&options);
+  example::Menu menu(window);
   try {
     world.init();
     menu.init();
@@ -154,7 +154,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
     glCullFace(GL_BACK);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_BLEND);
-    //glEnable(GL_CULL_FACE);
+    glEnable(GL_CULL_FACE);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -180,7 +180,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
   SDL_DestroyWindow(window);
   SDL_Quit();
 
-  hmi::save_configuration(options, "config.json");
+  example::save_configuration(options, "config.json");
 
   return 0;
 }

@@ -1,5 +1,5 @@
-#ifndef HMI_OPTIONS_H
-#define HMI_OPTIONS_H
+#ifndef EXAMPLE_OPTIONS_H
+#define EXAMPLE_OPTIONS_H
 
 
 #include <cstdint>
@@ -8,30 +8,26 @@
 #include <glm/glm.hpp>
 
 
-namespace hmi {
+namespace example {
 
 
 struct Options
 {
   bool quit = false;
+  bool limit_fps = true;
   bool show_menu = true;
   bool wireframe = false;
   bool lighting = true;
-  bool bounding_boxes = false;
+  bool bounding_boxes = true;
   bool ground = true;
-  bool ground_overlay = true;
-  bool animate_overlay = true;
   bool road = true;
-  bool road_markings = true;
-  bool limit_fps = true;
+  bool lane_markings = true;
   int window_width = 1280;
   int window_height = 720;
   int msaa_samples = 4;
   int max_fps = 90;
   float camera_velocity = 10.0f;
   float camera_sensitivity = 0.02f;
-  float vehicle_velocity = 0.0f;
-  float position_deviation = 0.0f;
   glm::vec4 main_color = {1.0f, 1.0f, 1.0f, 1.0f};
 };
 
@@ -40,7 +36,7 @@ Options load_configuration(std::string_view filename);
 void save_configuration(const Options& options, std::string_view filename);
 
 
-}  // namespace hmi
+}  // namespace example
 
 
-#endif  // HMI_OPTIONS_H
+#endif  // EXAMPLE_OPTIONS_H

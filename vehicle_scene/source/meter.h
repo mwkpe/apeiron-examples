@@ -1,5 +1,5 @@
-#ifndef HMI_METER_H
-#define HMI_METER_H
+#ifndef EXAMPLE_METER_H
+#define EXAMPLE_METER_H
 
 
 #include <glm/glm.hpp>
@@ -7,7 +7,7 @@
 #include "opengl/rectangle.h"
 
 
-namespace hmi {
+namespace example {
 
 
 class Meter final : public apeiron::engine::Entity
@@ -26,7 +26,7 @@ private:
 };
 
 
-}  // namespace hmi
+}  // namespace example
 
 
-#endif  // HMI_METER_H
+#endif  // EXAMPLE_METER_H

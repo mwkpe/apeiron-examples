@@ -12,7 +12,7 @@ using json = nlohmann::json;
 using namespace std::string_literals;
 
 
-auto hmi::load_configuration(std::string_view filename) -> Options
+auto example::load_configuration(std::string_view filename) -> Options
 {
   std::ifstream fs{std::string{filename}};
   if (!fs.is_open())
@@ -41,7 +41,7 @@ auto hmi::load_configuration(std::string_view filename) -> Options
 }
 
 
-void hmi::save_configuration(const Options& options, std::string_view filename)
+void example::save_configuration(const Options& options, std::string_view filename)
 {
   json j;
   j["window_width"] = options.window_width;

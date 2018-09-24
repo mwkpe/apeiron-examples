@@ -1,5 +1,5 @@
-#ifndef HMI_VEHICLE_H
-#define HMI_VEHICLE_H
+#ifndef EXAMPLE_VEHICLE_H
+#define EXAMPLE_VEHICLE_H
 
 
 #include <glm/glm.hpp>
@@ -9,7 +9,7 @@
 #include "opengl/texture.h"
 
 
-namespace hmi {
+namespace example {
 
 
 class Vehicle final : public apeiron::engine::Entity
@@ -19,9 +19,7 @@ public:
   void load_model(std::string_view filename, int flags);
   void load_texture(std::string_view filename);
   void set_velocity(float velocity) { velocity_ = velocity; }
-  void set_color(const glm::vec4& color) { color_ = color; }
   float velocity() const { return velocity_; }
-  glm::vec4 color() const { return color_; }
   void render() const override { texture_.bind(); model_.render(); }
   void render_bounds() const override { bounding_box_.render(); };
 
@@ -29,12 +27,11 @@ private:
   apeiron::opengl::Model model_;
   apeiron::opengl::Texture texture_;
   apeiron::opengl::Cuboid bounding_box_;
-  glm::vec4 color_ = glm::vec4{1.0f, 1.0f, 1.0f, 1.0f};
   float velocity_ = 0.0f;
 };
 
 
-}  // namespace hmi
+}  // namespace example
 
 
-#endif  // HMI_VEHICLE_H
+#endif  // EXAMPLE_VEHICLE_H

@@ -6,10 +6,24 @@
 #include "engine/model_flags.h"
 
 
-void hmi::World::init()
+example::World::World(const Options* options)
+    : options_{options},
+      roboto_mono_{16, 8, 32},
+      light_{&bulb_},
+      ground_{{40.0f, 200.0f}, 17, 41, {0.25f, 0.25f, 0.25f, 1.0f}, 1.0f},
+      ego_vehicle_{{1.847f, 1.271f, 4.131f}},
+      target_vehicle_{{1.916f, 1.266f, 4.396f}}
 {
-  renderer_.init(static_cast<float>(options_->window_width),
-      static_cast<float>(options_->window_height));
+}
+
+
+void example::World::init()
+{
+  renderer_.init();
+  auto aspect_ratio = static_cast<float>(options_->window_width) / options_->window_height;
+  renderer_.set_projection(glm::perspective(glm::radians(45.0f), aspect_ratio, 2.5f, 500.0f));
+  renderer_.set_light_color({1.0f, 1.0f, 1.0f, 1.0f});
+
   roboto_mono_.load("assets/roboto_mono_modified.png");
 
   {
@@ -22,35 +36,38 @@ void hmi::World::init()
 
     ego_vehicle_.load_model("assets/bmw.obj", mf::vertices | mf::normals | mf::texcoords);
     ego_vehicle_.load_texture("assets/bmw.png");
+    ego_vehicle_.set_position(0.0f, 0.1f, 15.0f);
     ego_vehicle_.set_center(0.0f, ego_vehicle_.size().y / 2.0f, 0.0f);
-    ego_vehicle_.set_color({0.129f, 0.588f, 0.952f, 1.0f});
+    ego_vehicle_.set_color(0.129f, 0.588f, 0.952f);
 
     target_vehicle_.load_model("assets/audi.obj", mf::vertices | mf::normals | mf::texcoords);
     target_vehicle_.load_texture("assets/audi.png");
-    target_vehicle_.set_position(3.6f, 0.0f, 75.0f);
+    target_vehicle_.set_position(3.6f, 0.1f, 0.0f);
     target_vehicle_.set_center(0.0f, target_vehicle_.size().y / 2.0f, 0.0f);
-    target_vehicle_.set_color({0.956f, 0.262f, 0.211f, 1.0f});
+    target_vehicle_.set_color(0.956f, 0.262f, 0.211f);
   }
+
+  lane_markings_.set_color(0.85f, 0.85f, 0.85f);
 
   set_camera(0);
 }
 
 
-void hmi::World::set_camera(int i)
+void example::World::set_camera(int i)
 {
   switch (i) {
     case 0:
-      camera_.set({0.0f, 35.0f, 25.0f}, -55.0f, -90.0f);
+      camera_.setup(-40.0f, -90.0f, {0.0f, 25.0f, 35.0f});
       break;
     case 1:
-      camera_.set({25.0f, 40.0f, 40.0f}, -40.0f, -125.0f);
+      camera_.setup(-45.0f, -135.0f, {25.0f, 40.0f, 40.0f});
       break;
     default:;
   }
 }
 
 
-void hmi::World::update([[maybe_unused]] float time, float delta_time,
+void example::World::update([[maybe_unused]] float time, float delta_time,
     const apeiron::engine::Input* input)
 {
   if (input) {
@@ -67,59 +84,29 @@ void hmi::World::update([[maybe_unused]] float time, float delta_time,
 
     camera_.orient(input->mouse_x_rel, input->mouse_y_rel, options_->camera_sensitivity);
   }
-
-  deviation_meter_.set_deviation(options_->position_deviation);
-  deviation_meter_.update(delta_time);
-
-  float ground_z = ground_.position().z;
-  ground_z += delta_time * (ego_vehicle_.velocity());
-  if (ground_z > ground_.spacing().z)
-    ground_z -= ground_.spacing().z;
-  if (ground_z < -ground_.spacing().z)
-    ground_z += ground_.spacing().z;
-  ground_.set_position(0.0f, -0.1f, ground_z);
-
-  float line_z = line_markings_.position().z;
-  float line_spacing = line_markings_.line_spacing();
-  line_z += delta_time * (ego_vehicle_.velocity());
-  if (line_z > line_spacing)
-    line_z -= line_spacing;
-  if (line_z < -line_spacing)
-    line_z += line_spacing;
-  line_markings_.set_position(0.0f, 0.0f, line_z);
 }
 
 
-void hmi::World::render()
+void example::World::render()
 {
   frame_++;
-  auto aspect_ratio = static_cast<float>(options_->window_width) / options_->window_height;
-  renderer_.set_projection(glm::perspective(glm::radians(45.0f), aspect_ratio, 2.5f, 500.0f));
-  renderer_.set_view(camera_.view());
-  renderer_.set_wireframe(options_->wireframe);
-  renderer_.set_light_color({1.0f, 1.0f, 1.0f});
 
-  renderer_.use_vertex_color_shading();
+  renderer_.set_view(camera_.view());
+  renderer_.set_wireframe(options_->wireframe); 
   renderer_.set_lighting(false);
 
   if (options_->ground) {
+    renderer_.use_vertex_color_shading();
     renderer_.render(ground_);
+  }
+  if (options_->road) {
+    renderer_.render(road_);
   }
 
   renderer_.use_color_shading();
-
-  if (options_->road) {
-    renderer_.render(road_, road_.color());
+  if (options_->lane_markings) {
+    renderer_.render(lane_markings_, lane_markings_.color());
   }
-
-  if (options_->road_markings) {
-    renderer_.render(line_markings_, line_markings_.color());
-  }
-
-  if (options_->ground_overlay) {
-    deviation_meter_.render(renderer_, options_->animate_overlay);
-  }
-
   if (options_->bounding_boxes) {
     renderer_.render_bounds(ego_vehicle_, ego_vehicle_.color());
     renderer_.render_bounds(target_vehicle_, target_vehicle_.color());

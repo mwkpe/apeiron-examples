@@ -1,5 +1,5 @@
-#ifndef HMI_ROAD_H
-#define HMI_ROAD_H
+#ifndef EXAMPLE_ROAD_H
+#define EXAMPLE_ROAD_H
 
 
 #include <glm/glm.hpp>
@@ -7,14 +7,13 @@
 #include "opengl/rectangle.h"
 
 
-namespace hmi {
+namespace example {
 
 
 class Road final : public apeiron::engine::Entity
 {
 public:
   Road();
-  glm::vec4 color() const { return {0.156f, 0.168f, 0.164f, 1.0f}; }
   void render() const override { road_.render(); }
 
 private:
@@ -22,7 +21,7 @@ private:
 };
 
 
-}  // namespace hmi
+}  // namespace example
 
 
-#endif  // HMI_ROAD_H
+#endif  // EXAMPLE_ROAD_H

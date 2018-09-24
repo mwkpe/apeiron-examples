@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(vehicle_hmi)
+project(vehicle_scene)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_FLAGS "-O3 -Wall -Wextra -pedantic-errors")
@@ -17,7 +17,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR}
 link_directories(${APEIRON_LIBRARY_DIRECTORY}/SDL2/x86_64-w64-mingw32/lib
     ${APEIRON_LIBRARY_DIRECTORY}/glew/lib/Release/x64)
 
-add_executable(vehicle_hmi
+add_executable(vehicle_scene
     ${APEIRON_LIBRARY_DIRECTORY}/imgui/imgui.cpp
     ${APEIRON_LIBRARY_DIRECTORY}/imgui/imgui.h
     ${APEIRON_LIBRARY_DIRECTORY}/imgui/imgui_draw.cpp
@@ -42,8 +42,6 @@ add_executable(vehicle_hmi
     ${APEIRON_DIRECTORY}/opengl/rectangle.h
     ${APEIRON_DIRECTORY}/opengl/cuboid.cpp
     ${APEIRON_DIRECTORY}/opengl/cuboid.h
-    ${APEIRON_DIRECTORY}/opengl/cylinder.cpp
-    ${APEIRON_DIRECTORY}/opengl/cylinder.h
     ${APEIRON_DIRECTORY}/opengl/model.cpp
     ${APEIRON_DIRECTORY}/opengl/model.h
     ${APEIRON_DIRECTORY}/opengl/gui.cpp
@@ -59,6 +57,8 @@ add_executable(vehicle_hmi
     ${APEIRON_DIRECTORY}/engine/model_loader.cpp
     ${APEIRON_DIRECTORY}/engine/model_loader.h
     ${APEIRON_DIRECTORY}/engine/model_flags.h
+    ${APEIRON_DIRECTORY}/prefab/light.h
+    ${APEIRON_DIRECTORY}/prefab/ground.h
     source/main.cpp
     source/options.cpp
     source/options.h
@@ -68,18 +68,9 @@ add_executable(vehicle_hmi
     source/world.h
     source/vehicle.cpp
     source/vehicle.h
-    source/light.h
-    source/ground.h
     source/road.cpp
     source/road.h
-    source/meter.h
-    source/line_markings.cpp
-    source/line_markings.h
-    source/position_marker.cpp
-    source/position_marker.h
-    source/deviation_animation.cpp
-    source/deviation_animation.h
-    source/deviation_meter.cpp
-    source/deviation_meter.h)
+    source/lane_markings.cpp
+    source/lane_markings.h)
 
-target_link_libraries(vehicle_hmi -lmingw32 -lglew32 -lglu32 -lopengl32 -lSDL2main -lSDL2)
+target_link_libraries(vehicle_scene -lmingw32 -lglew32 -lglu32 -lopengl32 -lSDL2main -lSDL2)

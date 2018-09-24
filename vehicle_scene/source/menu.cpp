@@ -62,7 +62,7 @@ void set_main_color(ImGuiStyle& style, ImVec4 color)
 }  // namespace
 
 
-void hmi::Menu::setup(Options* options)
+void example::Menu::setup(Options* options)
 {
   ImGui::StyleColorsDark();
   set_style(ImGui::GetStyle());
@@ -71,7 +71,7 @@ void hmi::Menu::setup(Options* options)
 }
 
 
-void hmi::Menu::build(Options* options, float time)
+void example::Menu::build(Options* options, float time)
 {
   auto& io = ImGui::GetIO();
 
@@ -93,13 +93,7 @@ void hmi::Menu::build(Options* options, float time)
     ImGui::SameLine();
     ImGui::Checkbox("Road", &options->road);
     ImGui::SameLine();
-    ImGui::Checkbox("Markings", &options->road_markings);
-    ImGui::Checkbox("Overlay", &options->ground_overlay);
-    ImGui::SameLine();
-    ImGui::Checkbox("Animate", &options->animate_overlay);
-    ImGui::Text("Vehicle");
-    ImGui::SliderFloat("Velocity (m/s)", &options->vehicle_velocity, -10.0f, 55.5f);
-    ImGui::SliderFloat("Position (m)", &options->position_deviation, -50.0f, 50.0f);
+    ImGui::Checkbox("Lane markings", &options->lane_markings);
     ImGui::Text("Camera");
     ImGui::SliderFloat("Speed (m/s)", &options->camera_velocity, 0.0f, 20.0f);
     ImGui::SliderFloat("Sensitivity", &options->camera_sensitivity, 0.0f, 0.1f);

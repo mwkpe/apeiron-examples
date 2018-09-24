@@ -95,8 +95,8 @@ void example::World::render()
   renderer_.set_wireframe(options_->wireframe); 
   renderer_.set_lighting(false);
 
+  renderer_.use_vertex_color_shading();
   if (options_->ground) {
-    renderer_.use_vertex_color_shading();
     renderer_.render(ground_);
   }
   if (options_->road) {

@@ -116,7 +116,9 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
     auto input = get_input_state();
     world.update(time, delta_time, &input);
 
+    glCullFace(GL_BACK);
     glEnable(GL_DEPTH_TEST);
+    glEnable(GL_CULL_FACE);
     glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 

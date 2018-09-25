@@ -1,5 +1,5 @@
-#ifndef POINT_CLOUD_H
-#define POINT_CLOUD_H
+#ifndef EXAMPLE_POINT_CLOUD_H
+#define EXAMPLE_POINT_CLOUD_H
 
 
 #include "engine/entity.h"
@@ -24,4 +24,4 @@ private:
 }  // namespace example
 
 
-#endif  // POINT_CLOUD_H
+#endif  // EXAMPLE_POINT_CLOUD_H

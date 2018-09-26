@@ -24,7 +24,7 @@ void example::World::init()
   renderer_.set_projection(glm::perspective(glm::radians(45.0f), aspect_ratio, 2.5f, 500.0f));
   renderer_.set_light_color({1.0f, 1.0f, 1.0f, 1.0f});
 
-  roboto_mono_.load("assets/roboto_mono_modified.png");
+  roboto_mono_.load_texture("assets/roboto_mono_modified.png");
 
   {
     namespace mf = apeiron::engine::model_flags;

@@ -19,10 +19,10 @@ public:
   glm::vec3 size() const { return board_size_; }
 
 private:
-	glm::vec3 board_size_;
-	glm::vec3 tile_size_;
-	apeiron::opengl::Cuboid white_;
-	apeiron::opengl::Cuboid black_;
+  glm::vec3 board_size_;
+  glm::vec3 tile_size_;
+  apeiron::opengl::Cuboid white_;
+  apeiron::opengl::Cuboid black_;
   std::vector<Tile> checkerboard_;
 };
 

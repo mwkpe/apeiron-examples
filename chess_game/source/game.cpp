@@ -6,6 +6,18 @@
 #include "engine/model_flags.h"
 
 
+namespace {
+
+
+inline glm::vec3 as_world_position(std::size_t board_index, float board_height)
+{
+  return {(board_index % 8) + 0.5f - 4.0f, board_height, 4.0f - board_index / 8 - 0.5f};
+}
+
+
+}  // namespace
+
+
 example::chess::Game::Game(const Options* options)
     : options_{options},
       roboto_mono_{16, 8, 32},
@@ -14,9 +26,10 @@ example::chess::Game::Game(const Options* options)
       ground_{{32.0f, 32.0f}, 33, 33, {0.33f, 0.33f, 0.33f, 1.0f}, 1.0f},
       light_{&bulb_},
       board_{{8.0f, 0.25f, 8.0f}},
-      pawn_{Piece::Type::Pawn},
-      queen_{Piece::Type::Queen},
-      king_{Piece::Type::King}
+      pawn_{Piece::Type::Pawn, Piece::Chess_color::White},
+      queen_{Piece::Type::Queen, Piece::Chess_color::White},
+      king_{Piece::Type::King, Piece::Chess_color::White},
+      field_{}
 {
 }
 
@@ -44,9 +57,36 @@ void example::chess::Game::init()
   king_.set_model(&piece_models_[Piece::Type::King]);
   king_.set_position(-1.5f, board_.size().y, 2.5f);
 
-  teapot_.load_model();
-  teapot_.set_position(-3.0f, 1.0f, 5.0f);
-  teapot_.set_rotation(0.0f, glm::radians(-45.0f), 0.0f);
+  std::size_t i = 0;
+  field_[i] = pawn_;
+  field_[i]->set_position(as_world_position(i, board_.size().y));
+  field_[++i] = pawn_;
+  field_[i]->set_position(as_world_position(i, board_.size().y));
+  field_[++i] = pawn_;
+  field_[i]->set_position(as_world_position(i, board_.size().y));
+  field_[++i] = queen_;
+  field_[i]->set_position(as_world_position(i, board_.size().y));
+  field_[++i] = king_;
+  field_[i]->set_position(as_world_position(i, board_.size().y));
+  field_[++i] = pawn_;
+  field_[i]->set_position(as_world_position(i, board_.size().y));
+  field_[++i] = pawn_;
+  field_[i]->set_position(as_world_position(i, board_.size().y));
+  field_[++i] = pawn_;
+  field_[i]->set_position(as_world_position(i, board_.size().y));
+
+  while (++i < 16) {
+    field_[i] = pawn_;
+    field_[i]->set_position(as_world_position(i, board_.size().y));
+  }
+
+  pawn_.set_chess_color(Piece::Chess_color::Black);
+  for (std::size_t i=48; i<56; ++i) {
+    field_[i] = pawn_;
+    field_[i]->set_position(as_world_position(i, board_.size().y));
+  }
+
+  field_[1] = std::nullopt;
 
   light_.set_position(3.0f, 4.5f, 3.0f);
   light_.set_color(1.0f, 1.0f, 1.0f);
@@ -72,8 +112,6 @@ void example::chess::Game::update([[maybe_unused]] float time, float delta_time,
 
     camera_.orient(input->mouse_x_rel, input->mouse_y_rel, options_->camera_sensitivity);
   }
-
-  teapot_.set_rotation(time * glm::radians(120.0f) * glm::vec3{0.0f, 0.2f, 0.2f});
 }
 
 
@@ -86,13 +124,13 @@ void example::chess::Game::render()
   renderer_.set_wireframe(options_->wireframe); 
   renderer_.set_lighting(options_->lighting);
 
-  //renderer_.use_color_shading();
-  //renderer_.render(teapot_, {1.0f, 1.0f, 1.0f, 1.0f});
-
   renderer_.use_color_shading();
-  renderer_.render(pawn_, {0.882f, 0.156f, 0.521f, 1.0f});
-  renderer_.render(queen_, {0.882f, 0.156f, 0.521f, 1.0f});
-  renderer_.render(king_, {0.047f, 0.760f, 1.0f, 1.0f});
+  for (const auto& piece : field_) {
+    if (piece) {
+      renderer_.render(*piece, piece->chess_color() == Piece::Chess_color::White ?
+          glm::vec4{0.882f, 0.156f, 0.521f, 1.0f} : glm::vec4{0.047f, 0.760f, 1.0f, 1.0f});
+    }
+  }
 
   renderer_.use_vertex_color_shading();
   board_.render(renderer_);

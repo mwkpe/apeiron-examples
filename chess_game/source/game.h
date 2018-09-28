@@ -3,6 +3,7 @@
 
 
 #include <cstdint>
+#include <array>
 #include <vector>
 #include <map>
 #include "engine/input.h"
@@ -13,7 +14,6 @@
 #include "prefab/axes.h"
 #include "prefab/light.h"
 #include "prefab/ground.h"
-#include "prefab/teapot.h"
 #include "options.h"
 #include "board.h"
 #include "piece.h"
@@ -40,11 +40,11 @@ private:
   apeiron::prefab::Axes axes_;
   apeiron::prefab::Ground ground_;
   apeiron::prefab::Light light_;
-  apeiron::prefab::Teapot teapot_;
   Board board_;
   Piece pawn_;
   Piece queen_;
   Piece king_;
+  std::array<std::optional<Piece>, 64> field_;
   int frame_ = 0;
 };
 

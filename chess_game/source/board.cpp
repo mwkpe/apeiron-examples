@@ -19,7 +19,7 @@ auto build_checkerboard(glm::vec3 tile_size, const apeiron::opengl::Cuboid* whit
 
   int flip = 0;
   for (int i=0; i<64; ++i) {
-    checkerboard.emplace_back(++flip % 2 ? black : white);
+    checkerboard.emplace_back(++flip % 2 ? white : black);
     checkerboard.back().set_position(x, y, z);
     checkerboard.back().set_size(tile_size);
     x += tile_size.x;

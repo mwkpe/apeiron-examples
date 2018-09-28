@@ -9,9 +9,17 @@
 namespace {
 
 
-inline glm::vec3 as_world_position(std::size_t board_index, float board_height)
+constexpr float tile_size = 1.0f;
+constexpr float board_size = tile_size * 8.0f;
+constexpr float board_height = 0.25f;
+constexpr float tile_center = tile_size / 2.0f;
+constexpr float board_center = board_size / 2.0f;
+
+
+inline glm::vec3 as_world_position(std::size_t board_index)
 {
-  return {(board_index % 8) + 0.5f - 4.0f, board_height, 4.0f - board_index / 8 - 0.5f};
+  return {(board_index % 8) - board_center + tile_center, board_height,
+      board_center - board_index / 8 - tile_center};
 }
 
 
@@ -21,14 +29,11 @@ inline glm::vec3 as_world_position(std::size_t board_index, float board_height)
 example::chess::Game::Game(const Options* options)
     : options_{options},
       roboto_mono_{16, 8, 32},
-      camera_{-45.0f, -145.0f, {7.5f, 10.0f, 7.5f}},
+      camera_{-47.0f, -145.0f, {7.5f, 10.0f, 7.5f}},
       axes_{16, 0.01f, 25.0f},
-      ground_{{32.0f, 32.0f}, 33, 33, {0.33f, 0.33f, 0.33f, 1.0f}, 1.0f},
+      ground_{{32.0f, 32.0f}, 33, 33, {0.2f, 0.2f, 0.2f, 1.0f}, 1.0f},
       light_{&bulb_},
-      board_{{8.0f, 0.25f, 8.0f}},
-      pawn_{Piece::Type::Pawn, Piece::Chess_color::White},
-      queen_{Piece::Type::Queen, Piece::Chess_color::White},
-      king_{Piece::Type::King, Piece::Chess_color::White},
+      board_{{board_size, board_height, board_size}},
       field_{}
 {
 }
@@ -46,47 +51,14 @@ void example::chess::Game::init()
     namespace mf = apeiron::engine::model_flags;
     bulb_.load("assets/bulb.obj", mf::vertices);
     piece_models_[Piece::Type::Pawn].load("assets/pawn.obj", mf::vertices | mf::normals);
+    piece_models_[Piece::Type::Rook].load("assets/rook.obj", mf::vertices | mf::normals);
+    piece_models_[Piece::Type::Knight].load("assets/knight.obj", mf::vertices | mf::normals);
+    piece_models_[Piece::Type::Bishop].load("assets/bishop.obj", mf::vertices | mf::normals);
     piece_models_[Piece::Type::Queen].load("assets/queen.obj", mf::vertices | mf::normals);
     piece_models_[Piece::Type::King].load("assets/king.obj", mf::vertices | mf::normals);
   }
 
-  pawn_.set_model(&piece_models_[Piece::Type::Pawn]);
-  pawn_.set_position(1.5f, board_.size().y, 1.5f);
-  queen_.set_model(&piece_models_[Piece::Type::Queen]);
-  queen_.set_position(0.5f, board_.size().y, -3.5f);
-  king_.set_model(&piece_models_[Piece::Type::King]);
-  king_.set_position(-1.5f, board_.size().y, 2.5f);
-
-  std::size_t i = 0;
-  field_[i] = pawn_;
-  field_[i]->set_position(as_world_position(i, board_.size().y));
-  field_[++i] = pawn_;
-  field_[i]->set_position(as_world_position(i, board_.size().y));
-  field_[++i] = pawn_;
-  field_[i]->set_position(as_world_position(i, board_.size().y));
-  field_[++i] = queen_;
-  field_[i]->set_position(as_world_position(i, board_.size().y));
-  field_[++i] = king_;
-  field_[i]->set_position(as_world_position(i, board_.size().y));
-  field_[++i] = pawn_;
-  field_[i]->set_position(as_world_position(i, board_.size().y));
-  field_[++i] = pawn_;
-  field_[i]->set_position(as_world_position(i, board_.size().y));
-  field_[++i] = pawn_;
-  field_[i]->set_position(as_world_position(i, board_.size().y));
-
-  while (++i < 16) {
-    field_[i] = pawn_;
-    field_[i]->set_position(as_world_position(i, board_.size().y));
-  }
-
-  pawn_.set_chess_color(Piece::Chess_color::Black);
-  for (std::size_t i=48; i<56; ++i) {
-    field_[i] = pawn_;
-    field_[i]->set_position(as_world_position(i, board_.size().y));
-  }
-
-  field_[1] = std::nullopt;
+  place_pieces();
 
   light_.set_position(3.0f, 4.5f, 3.0f);
   light_.set_color(1.0f, 1.0f, 1.0f);
@@ -128,7 +100,7 @@ void example::chess::Game::render()
   for (const auto& piece : field_) {
     if (piece) {
       renderer_.render(*piece, piece->chess_color() == Piece::Chess_color::White ?
-          glm::vec4{0.882f, 0.156f, 0.521f, 1.0f} : glm::vec4{0.047f, 0.760f, 1.0f, 1.0f});
+          glm::vec4{0.882f, 0.156f, 0.521f, 1.0f} : glm::vec4{0.0f, 0.576f, 0.768f, 1.0f});
     }
   }
 
@@ -154,4 +126,58 @@ void example::chess::Game::render()
     else
       renderer_.render(light_, {0.3f, 0.3f, 0.3f, 1.0f});
   }
+}
+
+
+void example::chess::Game::place_pieces()
+{
+  std::size_t i = 0;
+
+  auto color = Piece::Chess_color::White;
+  field_[i] = Piece{Piece::Type::Rook, color, &piece_models_[Piece::Type::Rook]};
+  field_[i]->set_position(as_world_position(i));
+  field_[++i] = Piece{Piece::Type::Knight, color, &piece_models_[Piece::Type::Knight]};
+  field_[i]->set_rotation(0.0f, glm::radians(-180.0f), 0.0f);  // Face inside board
+  field_[i]->set_position(as_world_position(i));
+  field_[++i] = Piece{Piece::Type::Bishop, color, &piece_models_[Piece::Type::Bishop]};
+  field_[i]->set_position(as_world_position(i));
+  field_[++i] = Piece{Piece::Type::Queen, color, &piece_models_[Piece::Type::Queen]};
+  field_[i]->set_position(as_world_position(i));
+  field_[++i] = Piece{Piece::Type::King, color, &piece_models_[Piece::Type::King]};
+  field_[i]->set_position(as_world_position(i));
+  field_[++i] = Piece{Piece::Type::Bishop, color, &piece_models_[Piece::Type::Bishop]};
+  field_[i]->set_position(as_world_position(i));
+  field_[++i] = Piece{Piece::Type::Knight, color, &piece_models_[Piece::Type::Knight]};
+  field_[i]->set_position(as_world_position(i));
+  field_[i]->set_rotation(0.0f, glm::radians(-180.0f), 0.0f);  // Face inside board
+  field_[++i] = Piece{Piece::Type::Rook, color, &piece_models_[Piece::Type::Rook]};
+  field_[i]->set_position(as_world_position(i));
+
+  while (++i < 16) {
+    field_[i] = Piece{Piece::Type::Pawn, color, &piece_models_[Piece::Type::Pawn]};
+    field_[i]->set_position(as_world_position(i));
+  }
+
+  color = Piece::Chess_color::Black;
+  for (i=48; i<56; ++i) {
+    field_[i] = Piece{Piece::Type::Pawn, color, &piece_models_[Piece::Type::Pawn]};
+    field_[i]->set_position(as_world_position(i));
+  }
+
+  field_[i] = Piece{Piece::Type::Rook, color, &piece_models_[Piece::Type::Rook]};
+  field_[i]->set_position(as_world_position(i));
+  field_[++i] = Piece{Piece::Type::Knight, color, &piece_models_[Piece::Type::Knight]};
+  field_[i]->set_position(as_world_position(i));
+  field_[++i] = Piece{Piece::Type::Bishop, color, &piece_models_[Piece::Type::Bishop]};
+  field_[i]->set_position(as_world_position(i));
+  field_[++i] = Piece{Piece::Type::Queen, color, &piece_models_[Piece::Type::Queen]};
+  field_[i]->set_position(as_world_position(i));
+  field_[++i] = Piece{Piece::Type::King, color, &piece_models_[Piece::Type::King]};
+  field_[i]->set_position(as_world_position(i));
+  field_[++i] = Piece{Piece::Type::Bishop, color, &piece_models_[Piece::Type::Bishop]};
+  field_[i]->set_position(as_world_position(i));
+  field_[++i] = Piece{Piece::Type::Knight, color, &piece_models_[Piece::Type::Knight]};
+  field_[i]->set_position(as_world_position(i));
+  field_[++i] = Piece{Piece::Type::Rook, color, &piece_models_[Piece::Type::Rook]};
+  field_[i]->set_position(as_world_position(i));
 }

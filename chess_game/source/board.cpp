@@ -51,7 +51,6 @@ example::chess::Board::Board(glm::vec3 size) : board_size_{size},
   float x = -board_size_.x / 2.0f + center_offset_x;
   float z = board_size_.z / 2.0f + center_offset_z;
 
-
   const std::array<std::string, 16> letters { "A", "B", "C", "D", "E", "F", "G", "H",
       "1", "2", "3", "4", "5", "6", "7", "8" };
   std::size_t index = 0;

@@ -57,7 +57,7 @@ example::chess::Board::Board(glm::vec3 size) : board_size_{size},
 
   for (auto& letter : legend_) {
     letter.set_text(letters[index++]);
-    letter.set_size(0.75f);
+    letter.set_size(0.6f);
     letter.set_rotation(glm::radians(-90.0f), 0.0f, 0.0f);
     letter.set_position(x, 0.0f, z);
     
@@ -80,6 +80,6 @@ void example::chess::Board::render(apeiron::opengl::Renderer& renderer)
   renderer.set_lighting(false);
   renderer.use_color_shading();
   for (const auto& letter : legend_) {
-    renderer.render(letter, charset_, {1.0f, 1.0f, 1.0f, 1.0f});
+    renderer.render(letter, charset_, {0.7f, 0.7f, 0.7f, 1.0f});
   }
 }

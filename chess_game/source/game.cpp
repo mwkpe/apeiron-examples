@@ -60,7 +60,7 @@ void example::chess::Game::init()
 
   place_pieces();
 
-  light_.set_position(3.0f, 4.5f, 3.0f);
+  light_.set_position(5.0f, 4.5f, 5.0f);
   light_.set_color(1.0f, 1.0f, 1.0f);
   renderer_.set_light_color(light_.color());
   renderer_.set_light_position(light_.position());
@@ -131,53 +131,40 @@ void example::chess::Game::render()
 
 void example::chess::Game::place_pieces()
 {
-  std::size_t i = 0;
+  using Pt = Piece::Type;
+  const std::array<Piece::Type, 8> lineup { Pt::Rook, Pt::Knight, Pt::Bishop, Pt::Queen,
+      Pt::King, Pt::Bishop, Pt::Knight, Pt::Rook };
 
   auto color = Piece::Chess_color::White;
-  field_[i] = Piece{Piece::Type::Rook, color, &piece_models_[Piece::Type::Rook]};
-  field_[i]->set_position(as_world_position(i));
-  field_[++i] = Piece{Piece::Type::Knight, color, &piece_models_[Piece::Type::Knight]};
-  field_[i]->set_rotation(0.0f, glm::radians(-180.0f), 0.0f);  // Face inside board
-  field_[i]->set_position(as_world_position(i));
-  field_[++i] = Piece{Piece::Type::Bishop, color, &piece_models_[Piece::Type::Bishop]};
-  field_[i]->set_position(as_world_position(i));
-  field_[++i] = Piece{Piece::Type::Queen, color, &piece_models_[Piece::Type::Queen]};
-  field_[i]->set_position(as_world_position(i));
-  field_[++i] = Piece{Piece::Type::King, color, &piece_models_[Piece::Type::King]};
-  field_[i]->set_position(as_world_position(i));
-  field_[++i] = Piece{Piece::Type::Bishop, color, &piece_models_[Piece::Type::Bishop]};
-  field_[i]->set_position(as_world_position(i));
-  field_[++i] = Piece{Piece::Type::Knight, color, &piece_models_[Piece::Type::Knight]};
-  field_[i]->set_position(as_world_position(i));
-  field_[i]->set_rotation(0.0f, glm::radians(-180.0f), 0.0f);  // Face inside board
-  field_[++i] = Piece{Piece::Type::Rook, color, &piece_models_[Piece::Type::Rook]};
-  field_[i]->set_position(as_world_position(i));
+  std::size_t index = 0;
+  for (auto piece_type : lineup) {
+    field_[index] = Piece{piece_type, color, &piece_models_[piece_type]};
+    field_[index]->set_position(as_world_position(index));
+    index++;
+  }
 
-  while (++i < 16) {
-    field_[i] = Piece{Piece::Type::Pawn, color, &piece_models_[Piece::Type::Pawn]};
-    field_[i]->set_position(as_world_position(i));
+  // Make knights face the opponent
+  field_[1]->set_rotation(0.0f, glm::radians(-180.0f), 0.0f);
+  field_[6]->set_rotation(0.0f, glm::radians(-180.0f), 0.0f);
+
+  while (index < 16) {
+    field_[index] = Piece{Pt::Pawn, color, &piece_models_[Pt::Pawn]};
+    field_[index]->set_position(as_world_position(index));
+    index++;
   }
 
   color = Piece::Chess_color::Black;
-  for (i=48; i<56; ++i) {
-    field_[i] = Piece{Piece::Type::Pawn, color, &piece_models_[Piece::Type::Pawn]};
-    field_[i]->set_position(as_world_position(i));
+  index = 48;
+
+  while (index < 56) {
+    field_[index] = Piece{Pt::Pawn, color, &piece_models_[Pt::Pawn]};
+    field_[index]->set_position(as_world_position(index));
+    index++;
   }
 
-  field_[i] = Piece{Piece::Type::Rook, color, &piece_models_[Piece::Type::Rook]};
-  field_[i]->set_position(as_world_position(i));
-  field_[++i] = Piece{Piece::Type::Knight, color, &piece_models_[Piece::Type::Knight]};
-  field_[i]->set_position(as_world_position(i));
-  field_[++i] = Piece{Piece::Type::Bishop, color, &piece_models_[Piece::Type::Bishop]};
-  field_[i]->set_position(as_world_position(i));
-  field_[++i] = Piece{Piece::Type::Queen, color, &piece_models_[Piece::Type::Queen]};
-  field_[i]->set_position(as_world_position(i));
-  field_[++i] = Piece{Piece::Type::King, color, &piece_models_[Piece::Type::King]};
-  field_[i]->set_position(as_world_position(i));
-  field_[++i] = Piece{Piece::Type::Bishop, color, &piece_models_[Piece::Type::Bishop]};
-  field_[i]->set_position(as_world_position(i));
-  field_[++i] = Piece{Piece::Type::Knight, color, &piece_models_[Piece::Type::Knight]};
-  field_[i]->set_position(as_world_position(i));
-  field_[++i] = Piece{Piece::Type::Rook, color, &piece_models_[Piece::Type::Rook]};
-  field_[i]->set_position(as_world_position(i));
+  for (auto piece_type : lineup) {
+    field_[index] = Piece{piece_type, color, &piece_models_[piece_type]};
+    field_[index]->set_position(as_world_position(index));
+    index++;
+  }
 }

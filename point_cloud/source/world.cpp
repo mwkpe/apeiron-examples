@@ -13,10 +13,11 @@ example::World::World() : ground_{{200.0f, 200.0f}, 25, 25, {0.25f, 0.25f, 0.25f
 void example::World::init(int screen_width, int screen_height)
 {
   renderer_.init();
+  auto aspect_ratio = static_cast<float>(screen_width) / screen_height;
+  renderer_.preset_projection(glm::perspective(glm::radians(45.0f), aspect_ratio, 1.0f, 1000.0f));
   renderer_.use_vertex_color_shading();
   renderer_.set_lighting(false);
-  auto aspect_ratio = static_cast<float>(screen_width) / screen_height;
-  renderer_.set_projection(glm::perspective(glm::radians(45.0f), aspect_ratio, 1.0f, 1000.0f));
+
   camera_.setup(-30.0f, -190.0f, {55.0f, 25.0f, -15.0f});
   
   point_cloud_.load_data("MOUT_script3.xyzrgba");
@@ -49,7 +50,8 @@ void example::World::update([[maybe_unused]] float time, float delta_time,
 void example::World::render()
 {
   frame_++;
-  renderer_.set_view(camera_.view());
+  renderer_.preset_view(camera_.view());
+  renderer_.set_view_projection();
   renderer_.render(ground_);
   renderer_.render(point_cloud_);
 }

@@ -48,6 +48,7 @@ add_executable(vehicle_scene
     ${APEIRON_DIRECTORY}/opengl/gui.h
     ${APEIRON_DIRECTORY}/engine/error.h
     ${APEIRON_DIRECTORY}/engine/input.h
+    ${APEIRON_DIRECTORY}/engine/vertex.h
     ${APEIRON_DIRECTORY}/engine/entity.h
     ${APEIRON_DIRECTORY}/engine/camera.cpp
     ${APEIRON_DIRECTORY}/engine/camera.h

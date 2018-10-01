@@ -43,7 +43,7 @@ void example::chess::Game::init()
 {
   renderer_.init();
   auto aspect_ratio = static_cast<float>(options_->window_width) / options_->window_height;
-  renderer_.set_projection(glm::perspective(glm::radians(45.0f), aspect_ratio, 0.1f, 500.0f));
+  renderer_.preset_projection(glm::perspective(glm::radians(45.0f), aspect_ratio, 0.1f, 500.0f));
 
   roboto_mono_.load_texture("assets/roboto_mono.png");
 
@@ -91,8 +91,8 @@ void example::chess::Game::render()
 {
   frame_++;
 
-  renderer_.use_world_space();
-  renderer_.set_view(camera_.view());
+  renderer_.preset_view(camera_.view());
+  renderer_.set_view_projection();
   renderer_.set_wireframe(options_->wireframe); 
   renderer_.set_lighting(options_->lighting);
 

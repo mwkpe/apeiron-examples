@@ -34,6 +34,7 @@ add_executable(point_cloud
     ${APEIRON_DIRECTORY}/opengl/grid.h
     ${APEIRON_DIRECTORY}/engine/error.h
     ${APEIRON_DIRECTORY}/engine/input.h
+    ${APEIRON_DIRECTORY}/engine/vertex.h
     ${APEIRON_DIRECTORY}/engine/entity.h
     ${APEIRON_DIRECTORY}/engine/image_loader.cpp
     ${APEIRON_DIRECTORY}/engine/image_loader.h

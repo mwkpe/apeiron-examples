@@ -21,7 +21,7 @@ void example::World::init()
 {
   renderer_.init();
   auto aspect_ratio = static_cast<float>(options_->window_width) / options_->window_height;
-  renderer_.set_projection(glm::perspective(glm::radians(45.0f), aspect_ratio, 2.5f, 500.0f));
+  renderer_.preset_projection(glm::perspective(glm::radians(45.0f), aspect_ratio, 2.5f, 500.0f));
   renderer_.set_light_color({1.0f, 1.0f, 1.0f, 1.0f});
 
   roboto_mono_.load_texture("assets/roboto_mono_modified.png");
@@ -91,7 +91,8 @@ void example::World::render()
 {
   frame_++;
 
-  renderer_.set_view(camera_.view());
+  renderer_.preset_view(camera_.view());
+  renderer_.set_view_projection();
   renderer_.set_wireframe(options_->wireframe); 
   renderer_.set_lighting(false);
 

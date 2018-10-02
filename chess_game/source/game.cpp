@@ -71,18 +71,17 @@ void example::chess::Game::update([[maybe_unused]] float time, float delta_time,
     const apeiron::engine::Input* input)
 {
   if (input) {
-    using Direction = apeiron::engine::Camera::Direction;
-    auto distance = options_->camera_velocity * delta_time;
-    if (input->forward)
-      camera_.move(Direction::Forward, distance);
-    if (input->backward)
-      camera_.move(Direction::Backward, distance);
-    if (input->left)
-      camera_.move(Direction::Left, distance);
-    if (input->right)
-      camera_.move(Direction::Right, distance);
+    if (!options_->show_menu) {
+      update_camera(delta_time, input);
+    }
 
-    camera_.orient(input->mouse_x_rel, input->mouse_y_rel, options_->camera_sensitivity);
+    if (!mouse_left_pressed_ && input->mouse_left) {
+      mouse_left_pressed_ = true;
+      handle_mouse_click(input->mouse_x_abs, input->mouse_y_abs);
+    }
+    else if (mouse_left_pressed_ && !input->mouse_left) {
+      mouse_left_pressed_ = false;
+    }
   }
 }
 
@@ -125,6 +124,45 @@ void example::chess::Game::render()
       renderer_.render(light_, light_.color());
     else
       renderer_.render(light_, {0.3f, 0.3f, 0.3f, 1.0f});
+  }
+}
+
+
+void example::chess::Game::update_camera(float delta_time, const apeiron::engine::Input* input)
+{
+  using Direction = apeiron::engine::Camera::Direction;
+  auto distance = options_->camera_velocity * delta_time;
+
+  if (input->forward)
+    camera_.move(Direction::Forward, distance);
+  if (input->backward)
+    camera_.move(Direction::Backward, distance);
+  if (input->left)
+    camera_.move(Direction::Left, distance);
+  if (input->right)
+    camera_.move(Direction::Right, distance);
+
+  camera_.orient(input->mouse_x_rel, input->mouse_y_rel, options_->camera_sensitivity);
+}
+
+
+void example::chess::Game::handle_mouse_click(int x, int y)
+{
+  using namespace apeiron::engine;
+
+  float norm_x = static_cast<float>(x) / options_->window_width * 2.0f - 1.0f;
+  float norm_y = -(static_cast<float>(y) / options_->window_height * 2.0f - 1.0f);
+  Ray ray = screen_raycast(norm_x, norm_y, renderer_.inverse_view_projection());
+  if (auto index = board_.intersects(ray)) {
+    if (!selected_index_ && field_[*index]) {
+      selected_index_ = index;
+    }
+    else if (selected_index_ && *selected_index_ != *index) {
+      field_[*index] = field_[*selected_index_];
+      field_[*index]->set_position(as_world_position(*index));
+      field_[*selected_index_] = std::nullopt;
+      selected_index_ = std::nullopt;
+    }
   }
 }
 

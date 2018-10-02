@@ -13,19 +13,21 @@ auto build_checkerboard(glm::vec3 tile_size, const apeiron::opengl::Cuboid* whit
 {
   std::vector<example::chess::Tile> checkerboard;
 
+  // Build board from bottom left
   float x = -tile_size.x * 4 + tile_size.x / 2;
-  const float y = 0.0f + tile_size.y * 0.5f;  // Move to ground (constructed from center)
-  float z = -tile_size.z * 4 + tile_size.z / 2;
+  const float y = tile_size.y * 0.5f;  // Move to ground (constructed from center)
+  float z = tile_size.z * 4 - tile_size.z / 2;
 
   int flip = 0;
-  for (int i=0; i<64; ++i) {
-    checkerboard.emplace_back(++flip % 2 ? white : black);
+  for (std::size_t i=0; i<64; ++i) {
+    checkerboard.emplace_back(i, ++flip % 2 ? white : black);
     checkerboard.back().set_position(x, y, z);
     checkerboard.back().set_size(tile_size);
+    checkerboard.back().set_intersection_radius(tile_size.y * 1.5f);
     x += tile_size.x;
     if ((i + 1) % 8 == 0) {
       flip--;
-      z += tile_size.z;
+      z -= tile_size.z;
       x -= tile_size.x * 8;
     }
   }
@@ -42,7 +44,7 @@ example::chess::Board::Board(glm::vec3 size) : board_size_{size},
     charset_{16, 8, 32, 0.5f, 1.0f},
     white_{tile_size_, {0.9f, 0.9f, 0.9f, 1.0f}},
     black_{tile_size_, {0.1f, 0.1f, 0.1f, 1.0f}},
-    checkerboard_{build_checkerboard(tile_size_, &white_, &black_)}
+    tiles_{build_checkerboard(tile_size_, &white_, &black_)}
 {
   charset_.load_texture("assets/roboto_mono.png");
 
@@ -71,10 +73,20 @@ example::chess::Board::Board(glm::vec3 size) : board_size_{size},
 }
 
 
+std::optional<std::size_t> example::chess::Board::intersects(const apeiron::engine::Ray& ray)
+{
+  for (const auto& tile : tiles_) {
+    if (apeiron::engine::intersects(ray, tile))
+      return tile.board_index();
+  }
+  return std::nullopt;
+}
+
+
 void example::chess::Board::render(apeiron::opengl::Renderer& renderer)
 {
   renderer.use_vertex_color_shading();
-  for (const auto& tile : checkerboard_) {
+  for (const auto& tile : tiles_) {
     renderer.render(tile);
   }
   renderer.set_lighting(false);

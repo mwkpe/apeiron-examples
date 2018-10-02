@@ -31,6 +31,8 @@ public:
   void render();
 
 private:
+  void update_camera(float delta_time, const apeiron::engine::Input* input);
+  void handle_mouse_click(int x, int y);
   void place_pieces();
 
   const Options* options_;
@@ -44,6 +46,8 @@ private:
   apeiron::prefab::Light light_;
   Board board_;
   std::array<std::optional<Piece>, 64> field_;
+  std::optional<std::size_t> selected_index_;
+  bool mouse_left_pressed_ = false;
   int frame_ = 0;
 };
 

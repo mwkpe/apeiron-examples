@@ -4,9 +4,12 @@
 
 #include <array>
 #include <vector>
+#include <optional>
+#include <functional>
 #include "opengl/renderer.h"
 #include "opengl/tileset.h"
 #include "opengl/cuboid.h"
+#include "engine/ray.h"
 #include "engine/text.h"
 #include "tile.h"
 
@@ -18,6 +21,7 @@ class Board final
 {
 public:
   Board(glm::vec3 size);
+  std::optional<std::size_t> intersects(const apeiron::engine::Ray& ray);
   void render(apeiron::opengl::Renderer& renderer);
   glm::vec3 size() const { return board_size_; }
 
@@ -27,7 +31,7 @@ private:
   apeiron::opengl::Tileset charset_;
   apeiron::opengl::Cuboid white_;
   apeiron::opengl::Cuboid black_;
-  std::vector<Tile> checkerboard_;
+  std::vector<Tile> tiles_;
   std::array<apeiron::engine::Text, 16> legend_;
 };
 

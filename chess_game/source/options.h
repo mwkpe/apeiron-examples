@@ -28,6 +28,8 @@ struct Options
   float camera_velocity = 10.0f;
   float camera_sensitivity = 0.02f;
   glm::vec4 main_color = {1.0f, 1.0f, 1.0f, 1.0f};
+  glm::vec4 white_color = {0.75f, 0.75f, 0.75f, 1.0f};//{0.882f, 0.156f, 0.521f, 1.0f};
+  glm::vec4 black_color = {0.25f, 0.25f, 0.25f, 1.0f};//{0.0f, 0.576f, 0.768f, 1.0f};
 };
 
 

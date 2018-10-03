@@ -99,7 +99,7 @@ void example::chess::Game::render()
   for (const auto& piece : field_) {
     if (piece) {
       renderer_.render(*piece, piece->chess_color() == Piece::Chess_color::White ?
-          glm::vec4{0.882f, 0.156f, 0.521f, 1.0f} : glm::vec4{0.0f, 0.576f, 0.768f, 1.0f});
+          options_->white_color : options_->black_color);
     }
   }
 
@@ -154,9 +154,12 @@ void example::chess::Game::handle_mouse_click(int x, int y)
   float norm_y = -(static_cast<float>(y) / options_->window_height * 2.0f - 1.0f);
   Ray ray = screen_raycast(norm_x, norm_y, renderer_.inverse_view_projection());
   if (auto index = board_.intersects(ray)) {
-    if (!selected_index_ && field_[*index]) {
+    if (auto piece = field_[*index]; !selected_index_ && piece) {
       selected_index_ = index;
       board_.set_selected(*selected_index_, true);
+      board_.reset_allowed();
+      for (const auto i : allowed_tiles(*index, piece->type(), piece->chess_color()))
+        board_.set_allowed(i, true);
     }
     else if (selected_index_ && *selected_index_ != *index) {
       field_[*index] = field_[*selected_index_];
@@ -164,12 +167,14 @@ void example::chess::Game::handle_mouse_click(int x, int y)
       field_[*selected_index_] = std::nullopt;
       board_.set_selected(*selected_index_, false);
       selected_index_ = std::nullopt;
+      board_.reset_allowed();
     }
   }
   else {
     if (selected_index_)
       board_.set_selected(*selected_index_, false);
     selected_index_ = std::nullopt;
+    board_.reset_allowed();
   }
 }
 
@@ -212,4 +217,32 @@ void example::chess::Game::place_pieces()
     field_[index]->set_position(as_world_position(index));
     index++;
   }
+}
+
+
+std::vector<std::size_t> example::chess::Game::allowed_tiles(std::size_t board_index,
+    Piece::Type piece_type, Piece::Chess_color chess_color) const
+{
+  std::vector<std::size_t> allowed;
+
+  switch (piece_type) {
+    case Piece::Type::Pawn: {
+      if (chess_color == Piece::Chess_color::White) {
+        if (std::size_t index = board_index + 8; index < field_.size() && !field_[index]) {
+          allowed.push_back(index);
+          if (board_index > 7 && board_index < 16 && !field_[index + 8])
+            allowed.push_back(index + 8);
+        }
+        if (std::size_t index = board_index + 7; board_index % 8 > 0 &&
+            index < field_.size() && field_[index])
+          allowed.push_back(index);
+        if (std::size_t index = board_index + 9; board_index % 8 < 7 &&
+            index < field_.size() && field_[index])
+          allowed.push_back(index);
+      }
+    } break;
+    default: return {};
+  }
+
+  return allowed;
 }

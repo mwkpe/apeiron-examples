@@ -2,6 +2,7 @@
 #define EXAMPLE_CHESS_GAME_H
 
 
+#include <cstddef>
 #include <cstdint>
 #include <array>
 #include <vector>
@@ -34,6 +35,8 @@ private:
   void update_camera(float delta_time, const apeiron::engine::Input* input);
   void handle_mouse_click(int x, int y);
   void place_pieces();
+  std::vector<std::size_t> allowed_tiles(std::size_t board_index, Piece::Type piece_type,
+      Piece::Chess_color chess_color) const;
 
   const Options* options_;
   apeiron::opengl::Renderer renderer_;

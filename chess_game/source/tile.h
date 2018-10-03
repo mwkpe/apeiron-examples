@@ -17,10 +17,16 @@ public:
   Tile(std::size_t board_index, const apeiron::opengl::Cuboid* cuboid)
       : board_index_{board_index}, cuboid_{cuboid} {}
   std::size_t board_index() const { return board_index_; }
+  void set_selected(bool b) { selected_ = b; }
+  bool selected() const { return selected_; }
+  void set_allowed(bool b) { allowed_ = b; }
+  bool allowed() const { return allowed_; }
   void render() const override { cuboid_->render(); }
 
 private:
   std::size_t board_index_ = 0;
+  bool selected_ = false;
+  bool allowed_ = false;
   const apeiron::opengl::Cuboid* cuboid_ = nullptr;
 };
 

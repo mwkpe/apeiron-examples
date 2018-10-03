@@ -20,7 +20,7 @@ auto build_checkerboard(glm::vec3 tile_size, const apeiron::opengl::Cuboid* whit
 
   int flip = 0;
   for (std::size_t i=0; i<64; ++i) {
-    checkerboard.emplace_back(i, ++flip % 2 ? white : black);
+    checkerboard.emplace_back(i, ++flip % 2 ? black : white);
     checkerboard.back().set_position(x, y, z);
     checkerboard.back().set_size(tile_size);
     checkerboard.back().set_intersection_radius(tile_size.y * 1.5f);
@@ -36,15 +36,83 @@ auto build_checkerboard(glm::vec3 tile_size, const apeiron::opengl::Cuboid* whit
 }
 
 
+std::vector<apeiron::engine::Vertex_simple> build_highlight(glm::vec3 tile_size, float height)
+{
+  auto s = tile_size.x * 0.4f;
+  auto thickness = tile_size.x * 0.04f;
+  auto length = tile_size.x * 0.2f;
+
+  return {
+    // Top left
+    {-s,          height, -s + thickness},
+    {-s + length, height, -s + thickness},
+    {-s + length, height, -s},
+    {-s + length, height, -s},
+    {-s,          height, -s},
+    {-s,          height, -s + thickness},
+    // Top right
+    {s - length, height, -s + thickness},
+    {s,          height, -s + thickness},
+    {s,          height, -s},
+    {s,          height, -s},
+    {s - length, height, -s},
+    {s - length, height, -s + thickness},
+    // Bottom left
+    {s - length, height, s},
+    {s,          height, s},
+    {s,          height, s - thickness},
+    {s,          height, s - thickness},
+    {s - length, height, s - thickness},
+    {s - length, height, s},
+    // Bottom right
+    {-s,          height, s},
+    {-s + length, height, s},
+    {-s + length, height, s - thickness},
+    {-s + length, height, s - thickness},
+    {-s,          height, s - thickness},
+    {-s,          height, s},
+    // Left top
+    {-s + thickness, height, -s + thickness},
+    {-s,             height, -s + thickness},
+    {-s,             height, -s + length},
+    {-s,             height, -s + length},
+    {-s + thickness, height, -s + length},
+    {-s + thickness, height, -s + thickness},
+    // Left bottom
+    {-s + thickness, height, s - length},
+    {-s,             height, s - length},
+    {-s,             height, s - thickness},
+    {-s,             height, s - thickness},
+    {-s + thickness, height, s - thickness},
+    {-s + thickness, height, s - length},
+    // Right top
+    {s,             height, -s + thickness},
+    {s - thickness, height, -s + thickness},
+    {s - thickness, height, -s + length},
+    {s - thickness, height, -s + length},
+    {s,             height, -s + length},
+    {s,             height, -s + thickness},
+    // Right bottom
+    {s,             height, s - length},
+    {s - thickness, height, s - length},
+    {s - thickness, height, s - thickness},
+    {s - thickness, height, s - thickness},
+    {s,             height, s - thickness},
+    {s,             height, s - length}
+  };
+}
+
+
 }  // namespace
 
 
 example::chess::Board::Board(glm::vec3 size) : board_size_{size},
     tile_size_{size.x / 8, size.y, size.z / 8},
     charset_{16, 8, 32, 0.5f, 1.0f},
-    white_{tile_size_, {0.9f, 0.9f, 0.9f, 1.0f}},
+    white_{tile_size_, {0.25f, 0.25f, 0.25f, 1.0f}},
     black_{tile_size_, {0.1f, 0.1f, 0.1f, 1.0f}},
-    tiles_{build_checkerboard(tile_size_, &white_, &black_)}
+    tiles_{build_checkerboard(tile_size_, &white_, &black_)},
+    tile_highlight_{build_highlight(tile_size_, size.y / 2.0f + 0.025f)}
 {
   charset_.load_texture("assets/roboto_mono.png");
 
@@ -73,25 +141,54 @@ example::chess::Board::Board(glm::vec3 size) : board_size_{size},
 }
 
 
-std::optional<std::size_t> example::chess::Board::intersects(const apeiron::engine::Ray& ray)
+void example::chess::Board::set_selected(std::size_t board_index, bool b)
+{
+  if (board_index < tiles_.size())
+    tiles_[board_index].set_selected(b);
+}
+
+
+void example::chess::Board::set_allowed(std::size_t board_index, bool b)
+{
+  if (board_index < tiles_.size())
+    tiles_[board_index].set_allowed(b);
+}
+
+
+void example::chess::Board::render(apeiron::opengl::Renderer& renderer, const Options* options)
+{
+  renderer.set_lighting(options->lighting);
+  renderer.use_vertex_color_shading();
+
+  for (const auto& tile : tiles_) {
+    renderer.render(tile);
+    tile_highlight_.set_position(tile.position());
+  }
+
+  renderer.set_lighting(false);
+  renderer.use_color_shading();
+
+  for (const auto& tile : tiles_) {
+    if (tile.selected()) {
+      tile_highlight_.set_position(tile.position());
+      renderer.render(tile_highlight_, {0.7f, 0.7f, 0.7f, 1.0f});
+    }
+    else if (tile.allowed()) {
+      tile_highlight_.set_position(tile.position());
+      renderer.render(tile_highlight_, {0.1f, 0.5f, 0.1f, 1.0f});
+    }
+  }
+  for (const auto& letter : legend_) {
+    renderer.render(letter, charset_, {0.7f, 0.7f, 0.7f, 1.0f});
+  }
+}
+
+
+std::optional<std::size_t> example::chess::Board::intersects(const apeiron::engine::Ray& ray) const
 {
   for (const auto& tile : tiles_) {
     if (apeiron::engine::intersects(ray, tile))
       return tile.board_index();
   }
   return std::nullopt;
-}
-
-
-void example::chess::Board::render(apeiron::opengl::Renderer& renderer)
-{
-  renderer.use_vertex_color_shading();
-  for (const auto& tile : tiles_) {
-    renderer.render(tile);
-  }
-  renderer.set_lighting(false);
-  renderer.use_color_shading();
-  for (const auto& letter : legend_) {
-    renderer.render(letter, charset_, {0.7f, 0.7f, 0.7f, 1.0f});
-  }
 }

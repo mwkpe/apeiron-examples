@@ -31,7 +31,7 @@ example::chess::Game::Game(const Options* options)
       roboto_mono_{16, 8, 32},
       camera_{-47.0f, -145.0f, {7.5f, 10.0f, 7.5f}},
       axes_{16, 0.01f, 25.0f},
-      ground_{{32.0f, 32.0f}, 33, 33, {0.2f, 0.2f, 0.2f, 1.0f}, 1.0f},
+      ground_{{32.0f, 32.0f}, 33, 33, {0.25f, 0.25f, 0.25f, 1.0f}, 1.0f},
       light_{&bulb_},
       board_{{board_size, board_height, board_size}},
       field_{}
@@ -60,7 +60,7 @@ void example::chess::Game::init()
 
   place_pieces();
 
-  light_.set_position(5.0f, 4.5f, 5.0f);
+  light_.set_position(0.0f, 8.0f, 0.0f);
   light_.set_color(1.0f, 1.0f, 1.0f);
   renderer_.set_light_color(light_.color());
   renderer_.set_light_position(light_.position());
@@ -104,7 +104,7 @@ void example::chess::Game::render()
   }
 
   renderer_.use_vertex_color_shading();
-  board_.render(renderer_);
+  board_.render(renderer_, options_);
 
   renderer_.set_lighting(false);
 
@@ -156,13 +156,20 @@ void example::chess::Game::handle_mouse_click(int x, int y)
   if (auto index = board_.intersects(ray)) {
     if (!selected_index_ && field_[*index]) {
       selected_index_ = index;
+      board_.set_selected(*selected_index_, true);
     }
     else if (selected_index_ && *selected_index_ != *index) {
       field_[*index] = field_[*selected_index_];
       field_[*index]->set_position(as_world_position(*index));
       field_[*selected_index_] = std::nullopt;
+      board_.set_selected(*selected_index_, false);
       selected_index_ = std::nullopt;
     }
+  }
+  else {
+    if (selected_index_)
+      board_.set_selected(*selected_index_, false);
+    selected_index_ = std::nullopt;
   }
 }
 

@@ -26,6 +26,7 @@ public:
   Board(glm::vec3 size);
   void set_selected(std::size_t board_index, bool b);
   void set_allowed(std::size_t board_index, bool b);
+  void reset_allowed();
   void render(apeiron::opengl::Renderer& renderer, const Options* options);
   glm::vec3 size() const { return board_size_; }
   std::optional<std::size_t> intersects(const apeiron::engine::Ray& ray) const;
@@ -33,6 +34,8 @@ public:
 private:
   glm::vec3 board_size_;
   glm::vec3 tile_size_;
+  glm::vec4 selection_color_ = {0.7f, 0.7f, 0.7f, 1.0f};
+  glm::vec4 allowed_color_ = {0.203f, 0.698f, 0.419f, 1.0f};
   apeiron::opengl::Tileset charset_;
   apeiron::opengl::Cuboid white_;
   apeiron::opengl::Cuboid black_;

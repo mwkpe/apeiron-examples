@@ -103,13 +103,19 @@ std::vector<apeiron::engine::Vertex_simple> build_highlight(glm::vec3 tile_size,
 }
 
 
+[[maybe_unused]] inline bool dark_tile(std::size_t index)
+{
+  return index % 2 == index / 8 % 2;
+}
+
+
 }  // namespace
 
 
 example::chess::Board::Board(glm::vec3 size) : board_size_{size},
     tile_size_{size.x / 8, size.y, size.z / 8},
     charset_{16, 8, 32, 0.5f, 1.0f},
-    white_{tile_size_, {0.25f, 0.25f, 0.25f, 1.0f}},
+    white_{tile_size_, {0.2f, 0.2f, 0.2f, 1.0f}},
     black_{tile_size_, {0.1f, 0.1f, 0.1f, 1.0f}},
     tiles_{build_checkerboard(tile_size_, &white_, &black_)},
     tile_highlight_{build_highlight(tile_size_, size.y / 2.0f + 0.025f)}
@@ -155,6 +161,13 @@ void example::chess::Board::set_allowed(std::size_t board_index, bool b)
 }
 
 
+void example::chess::Board::reset_allowed()
+{
+  for (auto& tile : tiles_)
+    tile.set_allowed(false);
+}
+
+
 void example::chess::Board::render(apeiron::opengl::Renderer& renderer, const Options* options)
 {
   renderer.set_lighting(options->lighting);
@@ -171,11 +184,11 @@ void example::chess::Board::render(apeiron::opengl::Renderer& renderer, const Op
   for (const auto& tile : tiles_) {
     if (tile.selected()) {
       tile_highlight_.set_position(tile.position());
-      renderer.render(tile_highlight_, {0.7f, 0.7f, 0.7f, 1.0f});
+      renderer.render(tile_highlight_, selection_color_);
     }
     else if (tile.allowed()) {
       tile_highlight_.set_position(tile.position());
-      renderer.render(tile_highlight_, {0.1f, 0.5f, 0.1f, 1.0f});
+      renderer.render(tile_highlight_, allowed_color_);
     }
   }
   for (const auto& letter : legend_) {

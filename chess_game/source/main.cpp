@@ -148,7 +148,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
     glEnable(GL_BLEND);
     glEnable(GL_CULL_FACE);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-    glClearColor(0.15f, 0.15f, 0.15f, 1.0f);
+    glClearColor(0.35f, 0.35f, 0.35f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     game.render();

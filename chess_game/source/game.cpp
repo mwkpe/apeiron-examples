@@ -158,10 +158,10 @@ void example::chess::Game::handle_mouse_click(int x, int y)
       selected_index_ = index;
       board_.set_selected(*selected_index_, true);
       board_.reset_allowed();
-      for (const auto i : allowed_tiles(*index, piece->type(), piece->chess_color()))
+      for (const auto i : allowed_moves(*index, piece->type(), piece->chess_color()))
         board_.set_allowed(i, true);
     }
-    else if (selected_index_ && *selected_index_ != *index) {
+    else if (selected_index_ /*&& board_.allowed(*index)*/) {
       field_[*index] = field_[*selected_index_];
       field_[*index]->set_position(as_world_position(*index));
       field_[*selected_index_] = std::nullopt;
@@ -220,29 +220,75 @@ void example::chess::Game::place_pieces()
 }
 
 
-std::vector<std::size_t> example::chess::Game::allowed_tiles(std::size_t board_index,
+std::vector<std::size_t> example::chess::Game::allowed_moves(std::size_t board_index,
     Piece::Type piece_type, Piece::Chess_color chess_color) const
 {
-  std::vector<std::size_t> allowed;
+  std::vector<std::size_t> allowed_moves;
+
+  auto add_moves = [&](int steps, int step_gap) mutable {
+    int index = static_cast<int>(board_index) + step_gap;
+    while (steps-- > 0 && index >= 0 && index < 64) {
+      if (!field_[index]) {
+        allowed_moves.push_back(index);
+      }
+      else if (field_[index]->chess_color() != chess_color) {
+        allowed_moves.push_back(index);
+        return;
+      }
+      else return;
+      index += step_gap;
+    }
+  };
+
+  const int up_steps = (64 - board_index) / 8;
+  const int down_steps = board_index / 8;
+  const int left_steps = board_index % 8;
+  const int right_steps = 8 - (board_index % 8) - 1;
 
   switch (piece_type) {
     case Piece::Type::Pawn: {
       if (chess_color == Piece::Chess_color::White) {
         if (std::size_t index = board_index + 8; index < field_.size() && !field_[index]) {
-          allowed.push_back(index);
+          allowed_moves.push_back(index);
           if (board_index > 7 && board_index < 16 && !field_[index + 8])
-            allowed.push_back(index + 8);
+            allowed_moves.push_back(index + 8);
         }
         if (std::size_t index = board_index + 7; board_index % 8 > 0 &&
             index < field_.size() && field_[index])
-          allowed.push_back(index);
+          allowed_moves.push_back(index);
         if (std::size_t index = board_index + 9; board_index % 8 < 7 &&
             index < field_.size() && field_[index])
-          allowed.push_back(index);
+          allowed_moves.push_back(index);
       }
+    } break;
+    case Piece::Type::Rook: {
+      add_moves(up_steps, 8);
+      add_moves(down_steps, -8);
+      add_moves(right_steps, 1);
+      add_moves(left_steps, -1);
+    } break;
+    case Piece::Type::Knight: {
+
+    } break;
+    case Piece::Type::Bishop: {
+      add_moves(left_steps, 7);
+      add_moves(right_steps, 9);
+      add_moves(right_steps, -7);
+      add_moves(left_steps, -9);
+    } break;
+
+    case Piece::Type::Queen: {
+      add_moves(up_steps, 8);
+      add_moves(down_steps, -8);
+      add_moves(right_steps, 1);
+      add_moves(left_steps, -1);
+      add_moves(left_steps, 7);
+      add_moves(right_steps, 9);
+      add_moves(right_steps, -7);
+      add_moves(left_steps, -9);
     } break;
     default: return {};
   }
 
-  return allowed;
+  return allowed_moves;
 }

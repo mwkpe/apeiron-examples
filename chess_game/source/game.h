@@ -35,7 +35,7 @@ private:
   void update_camera(float delta_time, const apeiron::engine::Input* input);
   void handle_mouse_click(int x, int y);
   void place_pieces();
-  std::vector<std::size_t> allowed_tiles(std::size_t board_index, Piece::Type piece_type,
+  std::vector<std::size_t> allowed_moves(std::size_t board_index, Piece::Type piece_type,
       Piece::Chess_color chess_color) const;
 
   const Options* options_;

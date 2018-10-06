@@ -29,6 +29,7 @@ public:
   void reset_allowed();
   void render(apeiron::opengl::Renderer& renderer, const Options* options);
   glm::vec3 size() const { return board_size_; }
+  bool allowed(std::size_t board_index) { return tiles_[board_index].allowed(); }
   std::optional<std::size_t> intersects(const apeiron::engine::Ray& ray) const;
 
 private:

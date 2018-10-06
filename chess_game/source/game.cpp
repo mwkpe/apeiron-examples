@@ -161,7 +161,7 @@ void example::chess::Game::handle_mouse_click(int x, int y)
       for (const auto i : allowed_moves(*index, piece->type(), piece->chess_color()))
         board_.set_allowed(i, true);
     }
-    else if (selected_index_ /*&& board_.allowed(*index)*/) {
+    else if (selected_index_ && board_.allowed(*index)) {
       field_[*index] = field_[*selected_index_];
       field_[*index]->set_position(as_world_position(*index));
       field_[*selected_index_] = std::nullopt;
@@ -225,40 +225,44 @@ std::vector<std::size_t> example::chess::Game::allowed_moves(std::size_t board_i
 {
   std::vector<std::size_t> allowed_moves;
 
-  auto add_moves = [&](int steps, int step_gap) mutable {
-    int index = static_cast<int>(board_index) + step_gap;
+  auto add_moves = [&](int steps, const int step_size) {
+    int index = static_cast<int>(board_index) + step_size;
     while (steps-- > 0 && index >= 0 && index < 64) {
       if (!field_[index]) {
         allowed_moves.push_back(index);
       }
-      else if (field_[index]->chess_color() != chess_color) {
+      else if (field_[index]->chess_color() != chess_color &&
+          !(piece_type == Piece::Type::Pawn && std::abs(step_size) == 8)) {
         allowed_moves.push_back(index);
         return;
       }
       else return;
-      index += step_gap;
+      index += step_size;
     }
   };
 
-  const int up_steps = (64 - board_index) / 8;
+  const int up_steps = (field_.size() - board_index) / 8;
   const int down_steps = board_index / 8;
   const int left_steps = board_index % 8;
   const int right_steps = 8 - (board_index % 8) - 1;
 
   switch (piece_type) {
     case Piece::Type::Pawn: {
-      if (chess_color == Piece::Chess_color::White) {
-        if (std::size_t index = board_index + 8; index < field_.size() && !field_[index]) {
+      auto add_kill_move = [this, &allowed_moves, chess_color](auto index, bool can_move) {
+        if (can_move && field_[index] && field_[index]->chess_color() != chess_color)
           allowed_moves.push_back(index);
-          if (board_index > 7 && board_index < 16 && !field_[index + 8])
-            allowed_moves.push_back(index + 8);
-        }
-        if (std::size_t index = board_index + 7; board_index % 8 > 0 &&
-            index < field_.size() && field_[index])
-          allowed_moves.push_back(index);
-        if (std::size_t index = board_index + 9; board_index % 8 < 7 &&
-            index < field_.size() && field_[index])
-          allowed_moves.push_back(index);
+      };
+      switch (chess_color) {
+        case Piece::Chess_color::White:
+          add_moves(board_index / 8 == 1 ? 2 : 1, 8);
+          add_kill_move(board_index + 7, up_steps && left_steps);
+          add_kill_move(board_index + 9, up_steps && right_steps);
+          break;
+        case Piece::Chess_color::Black:
+          add_moves(board_index / 8 == 6 ? 2 : 1, -8);
+          add_kill_move(board_index - 7, down_steps && right_steps);
+          add_kill_move(board_index - 9, down_steps && left_steps);
+          break;
       }
     } break;
     case Piece::Type::Rook: {
@@ -268,7 +272,6 @@ std::vector<std::size_t> example::chess::Game::allowed_moves(std::size_t board_i
       add_moves(left_steps, -1);
     } break;
     case Piece::Type::Knight: {
-
     } break;
     case Piece::Type::Bishop: {
       add_moves(left_steps, 7);
@@ -276,7 +279,6 @@ std::vector<std::size_t> example::chess::Game::allowed_moves(std::size_t board_i
       add_moves(right_steps, -7);
       add_moves(left_steps, -9);
     } break;
-
     case Piece::Type::Queen: {
       add_moves(up_steps, 8);
       add_moves(down_steps, -8);
@@ -286,6 +288,8 @@ std::vector<std::size_t> example::chess::Game::allowed_moves(std::size_t board_i
       add_moves(right_steps, 9);
       add_moves(right_steps, -7);
       add_moves(left_steps, -9);
+    } break;
+    case Piece::Type::King: {
     } break;
     default: return {};
   }

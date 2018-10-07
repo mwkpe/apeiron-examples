@@ -12,7 +12,7 @@ namespace example::chess {
 class Menu final : public apeiron::opengl::Gui
 {
 public:
-  Menu(SDL_Window* window) : apeiron::opengl::Gui{window} {}
+  Menu(SDL_Window* window, SDL_GLContext context) : apeiron::opengl::Gui{window, context} {}
   void setup(Options* options);
   void build(Options* options, float time);
 };

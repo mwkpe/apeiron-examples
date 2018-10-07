@@ -67,7 +67,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
   SDL_GL_SetSwapInterval(0);
 
   example::chess::Game game(&options);
-  example::chess::Menu menu(window);
+  example::chess::Menu menu(window, context);
   try {
     game.init();
     menu.init();

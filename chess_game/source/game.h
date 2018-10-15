@@ -10,6 +10,7 @@
 #include "opengl/model.h"
 #include "opengl/renderer.h"
 #include "engine/input.h"
+#include "engine/event.h"
 #include "engine/camera.h"
 #include "engine/text.h"
 #include "prefab/axes.h"
@@ -28,12 +29,18 @@ class Game final
 public:
   Game(const Options* options);
   void init();
-  void update(float time, float delta_time, const apeiron::engine::Input* input = nullptr);
+  void update(float time, float delta_time, const std::vector<apeiron::engine::Event>& events,
+      const apeiron::engine::Input* input = nullptr);
   void render();
+
+  // Event handling
+  void operator()(const apeiron::engine::Mouse_motion_event& event);
+  void operator()(const apeiron::engine::Mouse_button_down_event& event);
+  void operator()(const apeiron::engine::Mouse_button_up_event& event);
+  void operator()(const apeiron::engine::Mouse_wheel_event& event);
 
 private:
   void update_camera(float delta_time, const apeiron::engine::Input* input);
-  void handle_mouse_click(int x, int y);
   void place_pieces();
   std::vector<std::size_t> allowed_moves(std::size_t board_index, Piece::Type piece_type,
       Piece::Chess_color chess_color) const;
@@ -49,8 +56,6 @@ private:
   apeiron::prefab::Light light_;
   Board board_;
   std::array<std::optional<Piece>, 64> field_;
-  std::optional<std::size_t> selected_index_;
-  bool mouse_left_pressed_ = false;
   int frame_ = 0;
 };
 

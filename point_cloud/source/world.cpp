@@ -18,7 +18,7 @@ void example::World::init(int screen_width, int screen_height)
   renderer_.use_vertex_color_shading();
   renderer_.set_lighting(false);
 
-  camera_.setup(-30.0f, -190.0f, {55.0f, 25.0f, -15.0f});
+  camera_.setup(-30.0f, -100.0f, {55.0f, 25.0f, -15.0f});
   
   point_cloud_.load_data("MOUT_script3.xyzrgba");
   point_cloud_.set_point_size(1.0f);

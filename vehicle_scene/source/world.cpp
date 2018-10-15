@@ -57,10 +57,10 @@ void example::World::set_camera(int i)
 {
   switch (i) {
     case 0:
-      camera_.setup(-40.0f, -90.0f, {0.0f, 25.0f, 35.0f});
+      camera_.setup(-40.0f, 0.0f, {0.0f, 25.0f, 35.0f});
       break;
     case 1:
-      camera_.setup(-45.0f, -135.0f, {25.0f, 40.0f, 40.0f});
+      camera_.setup(-45.0f, -45.0f, {25.0f, 40.0f, 40.0f});
       break;
     default:;
   }

@@ -58,19 +58,19 @@ std::vector<apeiron::engine::Vertex_simple> build_highlight(glm::vec3 tile_size,
     {s - length, height, -s},
     {s - length, height, -s + thickness},
     // Bottom left
-    {s - length, height, s},
-    {s,          height, s},
-    {s,          height, s - thickness},
-    {s,          height, s - thickness},
-    {s - length, height, s - thickness},
-    {s - length, height, s},
-    // Bottom right
     {-s,          height, s},
     {-s + length, height, s},
     {-s + length, height, s - thickness},
     {-s + length, height, s - thickness},
     {-s,          height, s - thickness},
     {-s,          height, s},
+    // Bottom right
+    {s - length, height, s},
+    {s,          height, s},
+    {s,          height, s - thickness},
+    {s,          height, s - thickness},
+    {s - length, height, s - thickness},
+    {s - length, height, s},
     // Left top
     {-s + thickness, height, -s + thickness},
     {-s,             height, -s + thickness},
@@ -103,6 +103,45 @@ std::vector<apeiron::engine::Vertex_simple> build_highlight(glm::vec3 tile_size,
 }
 
 
+std::vector<apeiron::engine::Vertex_simple> build_current_highlight(glm::vec3 tile_size, float height)
+{
+  auto s = tile_size.x * 0.4f;
+  auto thickness = tile_size.x * 0.04f;
+  auto length = tile_size.x * 0.2f;
+
+  return {
+    // Top
+    {-length / 2.0f,          height, -s + thickness},
+    {-length / 2.0f + length, height, -s + thickness},
+    {-length / 2.0f + length, height, -s},
+    {-length / 2.0f + length, height, -s},
+    {-length / 2.0f,          height, -s},
+    {-length / 2.0f,          height, -s + thickness},
+    // Bottom
+    {-length / 2.0f,          height, s},
+    {-length / 2.0f + length, height, s},
+    {-length / 2.0f + length, height, s - thickness},
+    {-length / 2.0f + length, height, s - thickness},
+    {-length / 2.0f,          height, s - thickness},
+    {-length / 2.0f,          height, s},
+    // Left
+    {-s + thickness, height, -length / 2.0f},
+    {-s,             height, -length / 2.0f},
+    {-s,             height, -length / 2.0f + length},
+    {-s,             height, -length / 2.0f + length},
+    {-s + thickness, height, -length / 2.0f + length},
+    {-s + thickness, height, -length / 2.0f},
+    // Right
+    {s,             height, -length / 2.0f},
+    {s - thickness, height, -length / 2.0f},
+    {s - thickness, height, -length / 2.0f + length},
+    {s - thickness, height, -length / 2.0f + length},
+    {s,             height, -length / 2.0f + length},
+    {s,             height, -length / 2.0f}
+  };
+}
+
+
 [[maybe_unused]] inline bool dark_tile(std::size_t index)
 {
   return index % 2 == index / 8 % 2;
@@ -118,7 +157,8 @@ example::chess::Board::Board(glm::vec3 size) : board_size_{size},
     white_{tile_size_, {0.2f, 0.2f, 0.2f, 1.0f}},
     black_{tile_size_, {0.1f, 0.1f, 0.1f, 1.0f}},
     tiles_{build_checkerboard(tile_size_, &white_, &black_)},
-    tile_highlight_{build_highlight(tile_size_, size.y / 2.0f + 0.025f)}
+    tile_highlight_{build_highlight(tile_size_, size.y / 2.0f + 0.025f)},
+    current_highlight_{build_current_highlight(tile_size_, size.y / 2.0f + 0.025f)}
 {
   charset_.load_texture("assets/roboto_mono.png");
 
@@ -147,21 +187,14 @@ example::chess::Board::Board(glm::vec3 size) : board_size_{size},
 }
 
 
-void example::chess::Board::set_selected(std::size_t board_index, bool b)
+void example::chess::Board::set_allowed(std::size_t board_index, bool allowed)
 {
   if (board_index < tiles_.size())
-    tiles_[board_index].set_selected(b);
+    tiles_[board_index].set_allowed(allowed);
 }
 
 
-void example::chess::Board::set_allowed(std::size_t board_index, bool b)
-{
-  if (board_index < tiles_.size())
-    tiles_[board_index].set_allowed(b);
-}
-
-
-void example::chess::Board::reset_allowed()
+void example::chess::Board::clear_allowed()
 {
   for (auto& tile : tiles_)
     tile.set_allowed(false);
@@ -175,33 +208,29 @@ void example::chess::Board::render(apeiron::opengl::Renderer& renderer, const Op
 
   for (const auto& tile : tiles_) {
     renderer.render(tile);
-    tile_highlight_.set_position(tile.position());
   }
 
   renderer.set_lighting(false);
   renderer.use_color_shading();
 
+  if (selected_index_) {
+    tile_highlight_.set_position(tiles_[*selected_index_].position());
+    renderer.render(tile_highlight_, selection_color_);
+  }
+
+  if (current_index_) {
+    current_highlight_.set_position(tiles_[*current_index_].position());
+    renderer.render(current_highlight_, current_color_);
+  }
+
   for (const auto& tile : tiles_) {
-    if (tile.selected()) {
-      tile_highlight_.set_position(tile.position());
-      renderer.render(tile_highlight_, selection_color_);
-    }
-    else if (tile.allowed()) {
+    if (tile.allowed()) {
       tile_highlight_.set_position(tile.position());
       renderer.render(tile_highlight_, allowed_color_);
     }
   }
+
   for (const auto& letter : legend_) {
     renderer.render(letter, charset_, {0.7f, 0.7f, 0.7f, 1.0f});
   }
-}
-
-
-std::optional<std::size_t> example::chess::Board::intersects(const apeiron::engine::Ray& ray) const
-{
-  for (const auto& tile : tiles_) {
-    if (apeiron::engine::intersects(ray, tile))
-      return tile.board_index();
-  }
-  return std::nullopt;
 }

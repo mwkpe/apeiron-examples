@@ -1,6 +1,7 @@
 #include "game.h"
 
 
+#include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "engine/model_flags.h"
@@ -23,15 +24,27 @@ inline glm::vec3 as_world_position(std::size_t board_index)
 }
 
 
+inline std::optional<std::size_t> as_board_index(float x, float y)
+{
+  if (x > -4.0f && x < 4.0f && y > -4.0f && y < 4.0f) {
+    const auto col = static_cast<std::size_t>(std::floor(x + 4.0f));
+    const auto row = static_cast<std::size_t>(std::floor(4.0f - y));
+    return row * 8ul + col;
+  }
+
+  return std::nullopt;
+}
+
+
 }  // namespace
 
 
 example::chess::Game::Game(const Options* options)
     : options_{options},
       roboto_mono_{16, 8, 32},
-      camera_{-47.0f, -145.0f, {7.5f, 10.0f, 7.5f}},
+      camera_{-47.0f, -55.0f, {7.5f, 10.0f, 7.5f}},
       axes_{16, 0.01f, 25.0f},
-      ground_{{32.0f, 32.0f}, 33, 33, {0.25f, 0.25f, 0.25f, 1.0f}, 1.0f},
+      ground_{{32.0f, 32.0f}, 32, 32, {0.25f, 0.25f, 0.25f, 1.0f}, 1.0f},
       light_{&bulb_},
       board_{{board_size, board_height, board_size}},
       field_{}
@@ -68,19 +81,14 @@ void example::chess::Game::init()
 
 
 void example::chess::Game::update([[maybe_unused]] float time, float delta_time,
-    const apeiron::engine::Input* input)
+    const std::vector<apeiron::engine::Event>& events, const apeiron::engine::Input* input)
 {
+  for (const auto& event : events)
+    std::visit(*this, event);
+
   if (input) {
     if (!options_->show_menu) {
       update_camera(delta_time, input);
-    }
-
-    if (!mouse_left_pressed_ && input->mouse_left) {
-      mouse_left_pressed_ = true;
-      handle_mouse_click(input->mouse_x_abs, input->mouse_y_abs);
-    }
-    else if (mouse_left_pressed_ && !input->mouse_left) {
-      mouse_left_pressed_ = false;
     }
   }
 }
@@ -143,39 +151,6 @@ void example::chess::Game::update_camera(float delta_time, const apeiron::engine
     camera_.move(Direction::Right, distance);
 
   camera_.orient(input->mouse_x_rel, input->mouse_y_rel, options_->camera_sensitivity);
-}
-
-
-void example::chess::Game::handle_mouse_click(int x, int y)
-{
-  using namespace apeiron::engine;
-
-  float norm_x = static_cast<float>(x) / options_->window_width * 2.0f - 1.0f;
-  float norm_y = -(static_cast<float>(y) / options_->window_height * 2.0f - 1.0f);
-  Ray ray = screen_raycast(norm_x, norm_y, renderer_.inverse_view_projection());
-  if (auto index = board_.intersects(ray)) {
-    if (auto piece = field_[*index]; !selected_index_ && piece) {
-      selected_index_ = index;
-      board_.set_selected(*selected_index_, true);
-      board_.reset_allowed();
-      for (const auto i : allowed_moves(*index, piece->type(), piece->chess_color()))
-        board_.set_allowed(i, true);
-    }
-    else if (selected_index_ && board_.allowed(*index)) {
-      field_[*index] = field_[*selected_index_];
-      field_[*index]->set_position(as_world_position(*index));
-      field_[*selected_index_] = std::nullopt;
-      board_.set_selected(*selected_index_, false);
-      selected_index_ = std::nullopt;
-      board_.reset_allowed();
-    }
-  }
-  else {
-    if (selected_index_)
-      board_.set_selected(*selected_index_, false);
-    selected_index_ = std::nullopt;
-    board_.reset_allowed();
-  }
 }
 
 
@@ -295,4 +270,68 @@ std::vector<std::size_t> example::chess::Game::allowed_moves(std::size_t board_i
   }
 
   return allowed_moves;
+}
+
+
+void example::chess::Game::operator()(const apeiron::engine::Mouse_motion_event& event)
+{
+  using namespace apeiron::engine::collision;
+  float norm_x = static_cast<float>(event.x) / options_->window_width * 2.0f - 1.0f;
+  float norm_y = -(static_cast<float>(event.y) / options_->window_height * 2.0f - 1.0f);
+  Ray ray = screen_raycast(norm_x, norm_y, renderer_.inverse_view_projection());
+  Plane plane{{0.0f, board_height, 0.0f}, {0.0f, 1.0f, 0.0f}};
+
+  board_.clear_current();
+  if (auto point = intersection_point(ray, plane)) {
+    if (auto index = as_board_index(point->x, point->z))
+      board_.set_current(*index);
+  }
+}
+
+
+void example::chess::Game::operator()(const apeiron::engine::Mouse_button_down_event& event)
+{
+  using namespace apeiron::engine::collision;
+
+  float norm_x = static_cast<float>(event.x) / options_->window_width * 2.0f - 1.0f;
+  float norm_y = -(static_cast<float>(event.y) / options_->window_height * 2.0f - 1.0f);
+  Ray ray = screen_raycast(norm_x, norm_y, renderer_.inverse_view_projection());
+  Plane plane{{0.0f, board_height, 0.0f}, {0.0f, 1.0f, 0.0f}};
+
+  if (auto point = intersection_point(ray, plane)) {
+    if (auto index = as_board_index(point->x, point->z)) {
+      if (auto piece = field_[*index]; !board_.selected_index() && piece) {
+        board_.set_selected(*index);
+        board_.clear_allowed();
+        for (const auto i : allowed_moves(*index, piece->type(), piece->chess_color()))
+          board_.set_allowed(i, true);
+      }
+      else if (auto selected_index = board_.selected_index(); selected_index &&
+          board_.allowed(*index)) {
+        field_[*index] = field_[*selected_index];
+        field_[*index]->set_position(as_world_position(*index));
+        field_[*selected_index] = std::nullopt;
+        board_.clear_selected();
+        board_.clear_allowed();
+      }
+    }
+    else {
+      board_.clear_selected();
+      board_.clear_allowed();
+    }
+  }
+  else {
+    board_.clear_selected();
+    board_.clear_allowed();
+  }
+}
+
+
+void example::chess::Game::operator()([[maybe_unused]] const apeiron::engine::Mouse_button_up_event& event)
+{
+}
+
+
+void example::chess::Game::operator()([[maybe_unused]] const apeiron::engine::Mouse_wheel_event& event)
+{
 }

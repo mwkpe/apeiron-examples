@@ -4,7 +4,7 @@
 
 #include <glm/glm.hpp>
 #include "engine/entity.h"
-#include "opengl/rectangle.h"
+#include "opengl/quad.h"
 
 
 namespace example {
@@ -14,10 +14,10 @@ class Road final : public apeiron::engine::Entity
 {
 public:
   Road();
-  void render() const override { road_.render(); }
+  void render() const override { quad_.render(); }
 
 private:
-  apeiron::opengl::Rectangle road_;
+  apeiron::opengl::Quad quad_;
 };
 
 

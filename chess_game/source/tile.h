@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <glm/glm.hpp>
 #include "engine/entity.h"
+#include "engine/collision.h"
 #include "opengl/cuboid.h"
 
 
@@ -17,9 +18,7 @@ public:
   Tile(std::size_t board_index, const apeiron::opengl::Cuboid* cuboid)
       : board_index_{board_index}, cuboid_{cuboid} {}
   std::size_t board_index() const { return board_index_; }
-  void set_selected(bool b) { selected_ = b; }
-  bool selected() const { return selected_; }
-  void set_allowed(bool b) { allowed_ = b; }
+  void set_allowed(bool allowed) { allowed_ = allowed; }
   bool allowed() const { return allowed_; }
   void render() const override { cuboid_->render(); }
 

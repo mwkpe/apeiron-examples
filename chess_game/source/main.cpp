@@ -3,6 +3,7 @@
 #include "GL/glew.h"
 #include "engine/error.h"
 #include "engine/input.h"
+#include "engine/event.h"
 #include "options.h"
 #include "menu.h"
 #include "game.h"
@@ -29,6 +30,21 @@ apeiron::engine::Input get_input_state()
   input.mouse_right =  mouse_state & SDL_BUTTON(SDL_BUTTON_RIGHT);
 
   return input;
+}
+
+
+apeiron::engine::Mouse_button get_mouse_button(std::uint8_t button)
+{
+  using namespace apeiron::engine;
+  switch (button) {
+    case SDL_BUTTON_LEFT: return Mouse_button::Left;
+    case SDL_BUTTON_MIDDLE: return Mouse_button::Middle;
+    case SDL_BUTTON_RIGHT: return Mouse_button::Right;
+    case SDL_BUTTON_X1: return Mouse_button::Side1;
+    case SDL_BUTTON_X2: return Mouse_button::Side2;
+  }
+
+  return Mouse_button::Unknown;
 }
 
 
@@ -94,6 +110,7 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
   bool benchmarking = false;
   float benchmark_start_time = 0;
   int benchmark_total_frames = 0;
+  std::vector<apeiron::engine::Event> events;
 
   while (!options.quit) {
     auto elapsed = frame_timer(benchmarking);  // May also delay and hence limits fps
@@ -137,11 +154,28 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
               break;
           }
         } break;
+        case SDL_MOUSEMOTION: {
+          events.push_back(apeiron::engine::Mouse_motion_event{event.motion.x, event.motion.y,
+              event.motion.xrel, event.motion.yrel});
+        } break;
+        case SDL_MOUSEBUTTONUP: {
+          events.push_back(apeiron::engine::Mouse_button_up_event{
+              get_mouse_button(event.button.button), event.button.x, event.button.y});
+        } break;
+        case SDL_MOUSEBUTTONDOWN: {
+          events.push_back(apeiron::engine::Mouse_button_down_event{
+              get_mouse_button(event.button.button), event.button.x, event.button.y});
+        } break;
+        case SDL_MOUSEWHEEL: {
+          events.push_back(apeiron::engine::Mouse_wheel_event{event.wheel.x, event.wheel.y});
+        } break;
+        default:;
       }
     }
 
     auto input = get_input_state();
-    game.update(time, delta_time, &input);
+    game.update(time, delta_time, events, &input);
+    events.clear();
 
     glCullFace(GL_BACK);
     glEnable(GL_DEPTH_TEST);

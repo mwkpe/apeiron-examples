@@ -6,11 +6,12 @@ set(CMAKE_CXX_FLAGS "-O3 -Wall -Wextra")
 
 include(../apeiron/CMakeLists.txt)
 
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}
-    ${CMAKE_CURRENT_SOURCE_DIR}/../apeiron/external
-    ${CMAKE_CURRENT_SOURCE_DIR}/../apeiron/external/SDL2/x86_64-w64-mingw32/include)
+include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../apeiron/external/SDL2/x86_64-w64-mingw32/lib)
+if (WIN32)
+  include_directories(${CMAKE_CURRENT_SOURCE_DIR}/../apeiron/external/SDL2/x86_64-w64-mingw32/include)
+  link_directories(${CMAKE_CURRENT_SOURCE_DIR}/../apeiron/external/SDL2/x86_64-w64-mingw32/lib)
+endif ()
 
 add_executable(point_cloud
     source/string_utils.h
@@ -20,4 +21,8 @@ add_executable(point_cloud
     source/world.cpp
     source/world.h)
 
-target_link_libraries(point_cloud apeiron -lmingw32 -lopengl32 -lSDL2main -lSDL2)
+if (WIN32 AND MINGW)
+  target_link_libraries(point_cloud apeiron -lmingw32 -lSDL2main -lSDL2)
+elseif (UNIX AND NOT APPLE)
+  target_link_libraries(point_cloud apeiron -lSDL2main -lSDL2)
+endif ()

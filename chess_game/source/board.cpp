@@ -173,7 +173,7 @@ example::chess::Board::Board(glm::vec3 size) : board_size_{size},
 
   for (auto& letter : legend_) {
     letter.set_text(letters[index++]);
-    letter.set_size(0.6f);
+    letter.set_text_size(0.6f);
     letter.set_rotation(glm::radians(-90.0f), 0.0f, 0.0f);
     letter.set_position(x, 0.0f, z);
     

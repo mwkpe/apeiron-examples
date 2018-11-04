@@ -36,7 +36,7 @@ void example::Point_cloud::load_data(std::string_view filename)
       }
     }
 
-    points_.init(std::move(data));
+    points_.set(std::move(data));
   }
 }
 

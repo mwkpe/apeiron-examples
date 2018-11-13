@@ -4,7 +4,6 @@
 #include <iostream>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "engine/model_flags.h"
 
 
 namespace {
@@ -60,16 +59,13 @@ void example::chess::Game::init()
 
   roboto_mono_.load_texture("assets/roboto_mono.png");
 
-  {
-    namespace mf = apeiron::engine::model_flags;
-    bulb_.load("assets/bulb.obj", mf::vertices);
-    piece_models_[Piece::Type::Pawn].load("assets/pawn.obj", mf::vertices | mf::normals);
-    piece_models_[Piece::Type::Rook].load("assets/rook.obj", mf::vertices | mf::normals);
-    piece_models_[Piece::Type::Knight].load("assets/knight.obj", mf::vertices | mf::normals);
-    piece_models_[Piece::Type::Bishop].load("assets/bishop.obj", mf::vertices | mf::normals);
-    piece_models_[Piece::Type::Queen].load("assets/queen.obj", mf::vertices | mf::normals);
-    piece_models_[Piece::Type::King].load("assets/king.obj", mf::vertices | mf::normals);
-  }
+  bulb_.load("assets/bulb.obj");
+  piece_models_[Piece::Type::Pawn].load("assets/pawn.obj");
+  piece_models_[Piece::Type::Rook].load("assets/rook.obj");
+  piece_models_[Piece::Type::Knight].load("assets/knight.obj");
+  piece_models_[Piece::Type::Bishop].load("assets/bishop.obj");
+  piece_models_[Piece::Type::Queen].load("assets/queen.obj");
+  piece_models_[Piece::Type::King].load("assets/king.obj");
 
   place_pieces();
 

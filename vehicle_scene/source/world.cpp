@@ -3,7 +3,6 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
-#include "engine/model_flags.h"
 
 
 example::World::World(const Options* options)
@@ -26,26 +25,22 @@ void example::World::init()
 
   roboto_mono_.load_texture("assets/roboto_mono_modified.png");
 
-  {
-    namespace mf = apeiron::engine::model_flags;
+  bulb_.load("assets/bulb.obj");
+  light_.set_position(0.0f, 5.0f, 1.0f);
+  light_.set_color(1.0f, 1.0f, 1.0f);
+  renderer_.set_light_color(light_.color());
 
-    bulb_.load("assets/bulb.obj", mf::vertices);
-    light_.set_position(0.0f, 5.0f, 1.0f);
-    light_.set_color(1.0f, 1.0f, 1.0f);
-    renderer_.set_light_color(light_.color());
+  ego_vehicle_.load_model("assets/bmw.obj");
+  ego_vehicle_.load_texture("assets/bmw.png");
+  ego_vehicle_.set_position(0.0f, 0.1f, 15.0f);
+  ego_vehicle_.set_center(0.0f, ego_vehicle_.size().y / 2.0f, 0.0f);
+  ego_vehicle_.set_color(0.129f, 0.588f, 0.952f);
 
-    ego_vehicle_.load_model("assets/bmw.obj", mf::vertices | mf::normals | mf::texcoords);
-    ego_vehicle_.load_texture("assets/bmw.png");
-    ego_vehicle_.set_position(0.0f, 0.1f, 15.0f);
-    ego_vehicle_.set_center(0.0f, ego_vehicle_.size().y / 2.0f, 0.0f);
-    ego_vehicle_.set_color(0.129f, 0.588f, 0.952f);
-
-    target_vehicle_.load_model("assets/audi.obj", mf::vertices | mf::normals | mf::texcoords);
-    target_vehicle_.load_texture("assets/audi.png");
-    target_vehicle_.set_position(3.6f, 0.1f, 0.0f);
-    target_vehicle_.set_center(0.0f, target_vehicle_.size().y / 2.0f, 0.0f);
-    target_vehicle_.set_color(0.956f, 0.262f, 0.211f);
-  }
+  target_vehicle_.load_model("assets/audi.obj");
+  target_vehicle_.load_texture("assets/audi.png");
+  target_vehicle_.set_position(3.6f, 0.1f, 0.0f);
+  target_vehicle_.set_center(0.0f, target_vehicle_.size().y / 2.0f, 0.0f);
+  target_vehicle_.set_color(0.956f, 0.262f, 0.211f);
 
   lane_markings_.set_color(0.85f, 0.85f, 0.85f);
 

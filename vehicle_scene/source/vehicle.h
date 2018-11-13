@@ -16,11 +16,11 @@ class Vehicle final : public apeiron::engine::Entity
 {
 public:
   explicit Vehicle(const glm::vec3& size) : Entity{size}, bounding_box_{size} {}
-  void load_model(std::string_view filename, int flags);
+  void load_model(std::string_view filename);
   void load_texture(std::string_view filename);
   void set_velocity(float velocity) { velocity_ = velocity; }
   float velocity() const { return velocity_; }
-  void render() const override { texture_.bind(); model_.render(); }
+  void render() const override;
   void render_bounds() const override { bounding_box_.render(); };
 
 private:

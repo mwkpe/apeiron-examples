@@ -20,7 +20,7 @@ public:
   void set_chess_color(Chess_color color) { chess_color_ = color; }
   Type type() const { return type_; }
   Chess_color chess_color() const { return chess_color_; }
-  void render() const override { model_->render(); }
+  void render() const override;
 
 private:
   Type type_ = Type::Pawn;

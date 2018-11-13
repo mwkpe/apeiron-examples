@@ -27,19 +27,19 @@ auto build_lane_markings()
 
   while (index++ < sections) {
     // Left stripe
-    vertices.push_back(Vertex_simple{-w - lw, h,      0.0f});
-    vertices.push_back(Vertex_simple{-w,      h,      0.0f});
-    vertices.push_back(Vertex_simple{-w - lw, h + ll, 0.0f});
-    vertices.push_back(Vertex_simple{-w,      h,      0.0f});
-    vertices.push_back(Vertex_simple{-w,      h + ll, 0.0f});
-    vertices.push_back(Vertex_simple{-w - lw, h + ll, 0.0f});
+    vertices.push_back({{-w - lw, h,      0.0f}});
+    vertices.push_back({{-w,      h,      0.0f}});
+    vertices.push_back({{-w - lw, h + ll, 0.0f}});
+    vertices.push_back({{-w,      h,      0.0f}});
+    vertices.push_back({{-w,      h + ll, 0.0f}});
+    vertices.push_back({{-w - lw, h + ll, 0.0f}});
     // Right stripe
-    vertices.push_back(Vertex_simple{w,      h,      0.0f});
-    vertices.push_back(Vertex_simple{w + lw, h,      0.0f});
-    vertices.push_back(Vertex_simple{w,      h + ll, 0.0f});
-    vertices.push_back(Vertex_simple{w + lw, h,      0.0f});
-    vertices.push_back(Vertex_simple{w + lw, h + ll, 0.0f});
-    vertices.push_back(Vertex_simple{w,      h + ll, 0.0f});
+    vertices.push_back({{w,      h,      0.0f}});
+    vertices.push_back({{w + lw, h,      0.0f}});
+    vertices.push_back({{w,      h + ll, 0.0f}});
+    vertices.push_back({{w + lw, h,      0.0f}});
+    vertices.push_back({{w + lw, h + ll, 0.0f}});
+    vertices.push_back({{w,      h + ll, 0.0f}});
 
     h += line_length + line_gap;
   }

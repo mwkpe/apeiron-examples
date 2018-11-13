@@ -5,12 +5,15 @@
 #include <fstream>
 #include "engine/vertex.h"
 #include "string_utils.h"
+#include "utility/timer.h"
 
 
 void example::Point_cloud::load_data(std::string_view filename)
 {
   using namespace nonstd::string_utils;
   using namespace apeiron::engine;
+
+  apeiron::utility::Scope_timer timer{"Load time"};
 
   if (std::ifstream file{std::string{filename}}; file.is_open()) {
     std::vector<Vertex_color> data;

@@ -28,18 +28,18 @@ void example::Point_cloud::load_data(std::string_view filename)
 
         // Negative values indicate missing color information, use fuchsia
         if (float r = std::stof(values[4]); r < 0.0f) {
-          data.push_back({{x + 30.0f, y + 625.0f, z - 128.0f}, {1.0f, 0.0f, 1.0f, 1.0f}});
+          data.emplace_back(x + 30.0f, y + 625.0f, z - 128.0f, 1.0f, 0.0f, 1.0f, 1.0f);
         }
         else {
           float g = std::stof(values[5]);
           float b = std::stof(values[6]);
           float a = std::stof(values[7]);
-          data.push_back({{x + 30.0f, y + 625.0f, z - 128.0f}, {r, g, b, a}});
+          data.emplace_back(x + 30.0f, y + 625.0f, z - 128.0f, r, g, b, a);
         }
       }
     }
 
-    points_.set(std::move(data));
+    points_.set(data);
   }
 }
 

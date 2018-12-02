@@ -1,6 +1,12 @@
 #include "vehicle.h"
 
 
+example::Vehicle::Vehicle(const glm::vec3& size) : bounding_box_{size} 
+{
+	set_size(size);
+}
+
+
 void example::Vehicle::load_model(std::string_view filename)
 {
   model_.load(filename);

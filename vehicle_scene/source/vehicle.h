@@ -15,10 +15,12 @@ namespace example {
 class Vehicle final : public apeiron::engine::Entity
 {
 public:
-  explicit Vehicle(const glm::vec3& size) : Entity{size}, bounding_box_{size} {}
+  explicit Vehicle(const glm::vec3& size);
   void load_model(std::string_view filename);
   void load_texture(std::string_view filename);
+  void set_color(float r, float g, float b, float a = 1.0f) { color_ = glm::vec4{r, g, b, a}; };
   void set_velocity(float velocity) { velocity_ = velocity; }
+  glm::vec4 color() const { return color_; }
   float velocity() const { return velocity_; }
   void render() const override;
   void render_bounds() const override { bounding_box_.render(); };
@@ -27,6 +29,7 @@ private:
   apeiron::opengl::Model model_;
   apeiron::opengl::Texture texture_;
   apeiron::opengl::Wire_cuboid bounding_box_;
+  glm::vec4 color_;
   float velocity_ = 0.0f;
 };
 

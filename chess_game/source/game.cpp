@@ -60,12 +60,12 @@ void example::chess::Game::init()
   roboto_mono_.load_texture("assets/roboto_mono.png");
 
   bulb_.load("assets/bulb.obj");
-  piece_models_[Piece::Type::Pawn].load("assets/pawn.obj");
-  piece_models_[Piece::Type::Rook].load("assets/rook.obj");
-  piece_models_[Piece::Type::Knight].load("assets/knight.obj");
-  piece_models_[Piece::Type::Bishop].load("assets/bishop.obj");
-  piece_models_[Piece::Type::Queen].load("assets/queen.obj");
-  piece_models_[Piece::Type::King].load("assets/king.obj");
+  piece_models_[Piece::Type::Pawn].load<apeiron::engine::Vertex_normal>("assets/pawn.obj");
+  piece_models_[Piece::Type::Rook].load<apeiron::engine::Vertex_normal>("assets/rook.obj");
+  piece_models_[Piece::Type::Knight].load<apeiron::engine::Vertex_normal>("assets/knight.obj");
+  piece_models_[Piece::Type::Bishop].load<apeiron::engine::Vertex_normal>("assets/bishop.obj");
+  piece_models_[Piece::Type::Queen].load<apeiron::engine::Vertex_normal>("assets/queen.obj");
+  piece_models_[Piece::Type::King].load<apeiron::engine::Vertex_normal>("assets/king.obj");
 
   place_pieces();
 

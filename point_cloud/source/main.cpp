@@ -61,19 +61,20 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 {
   disable_dpi_scaling();
 
+  int window_width = 1280;
+  int window_height = 720;
+  int msaa_samples = 4;
+
   SDL_Init(SDL_INIT_VIDEO);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
   SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
   SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
   SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-  SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 4);
-
-  int screen_width = 1280;
-  int screen_height = 720;
+  SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, msaa_samples);
 
   auto* window = SDL_CreateWindow("Point cloud", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-      screen_width, screen_height, SDL_WINDOW_OPENGL);
+      window_width, window_height, SDL_WINDOW_OPENGL);
   auto context = SDL_GL_CreateContext(window);
 
   glewExperimental = GL_TRUE;
@@ -83,13 +84,17 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
     return 1;
   }
 
+  glCullFace(GL_BACK);
+  glEnable(GL_CULL_FACE);
+  glEnable(GL_DEPTH_TEST);
+
   SDL_GL_SetSwapInterval(0);
   SDL_CaptureMouse(SDL_TRUE);
   SDL_SetRelativeMouseMode(SDL_TRUE);
 
   example::World world;
   try {
-    world.init(screen_width, screen_height);
+    world.init(window_width, window_height);
   }
   catch (const apeiron::engine::Error& e) {
     std::cerr << e.what() << std::endl;
@@ -144,13 +149,6 @@ int main([[maybe_unused]] int argc, [[maybe_unused]] char* argv[])
 
     auto input = get_input_state();
     world.update(time, delta_time, &input);
-
-    glCullFace(GL_BACK);
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_CULL_FACE);
-    glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
     world.render();
     SDL_GL_SwapWindow(window);
 

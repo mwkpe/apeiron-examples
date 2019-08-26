@@ -16,7 +16,7 @@ class World final
 {
 public:
   World();
-  void init(int screen_width, int screen_height);
+  void init(int window_width, int window_height);
   void update(float time, float delta_time, const apeiron::engine::Input* input = nullptr);
   void render();
 

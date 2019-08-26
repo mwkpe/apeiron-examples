@@ -10,12 +10,15 @@ example::World::World() : ground_{{200.0f, 200.0f}, 25, 25, {0.25f, 0.25f, 0.25f
 }
 
 
-void example::World::init(int screen_width, int screen_height)
+void example::World::init(int window_width, int window_height)
 {
   renderer_.init();  // Load default shader
-  auto aspect_ratio = static_cast<float>(screen_width) / screen_height;
+  renderer_.set_viewport(0, 0, window_width, window_height);
+
   // Set projection matrix in renderer
+  auto aspect_ratio = static_cast<float>(window_width) / window_height;
   renderer_.preset_projection(glm::perspective(glm::radians(45.0f), aspect_ratio, 1.0f, 1000.0f));
+
   // Set fragment shader to use color provided by the point vertices
   renderer_.use_vertex_color_shading();
   renderer_.set_lighting(false);
@@ -58,6 +61,7 @@ void example::World::render()
   renderer_.preset_view(camera_.view());
   // Multiply view matrix with stored projection matrix and update shader
   renderer_.set_view_projection();
+  renderer_.clear(0.1f, 0.1f, 0.1f);
   renderer_.render(ground_);
   renderer_.render(point_cloud_);
 }

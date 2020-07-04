@@ -3,7 +3,7 @@
 
 example::Vehicle::Vehicle(const glm::vec3& size) : bounding_box_{size} 
 {
-	set_size(size);
+  set_size(size);
 }
 
 
@@ -22,7 +22,7 @@ void example::Vehicle::load_texture(std::string_view filename)
 
 void example::Vehicle::render() const
 {
-	texture_.bind();
+  texture_.bind();
   for (const auto& mesh : model_)
-  	mesh.render();
+    mesh.render();
 }
